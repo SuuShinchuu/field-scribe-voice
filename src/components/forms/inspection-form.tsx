@@ -298,7 +298,6 @@ export const InspectionForm: React.FC = () => {
                 id="expedienteNova"
                 value={data.expedienteNova}
                 onChange={(e) => updateField('expedienteNova', e.target.value)}
-                placeholder="NC-CU-08223-25_ALDABA"
               />
               
             </div>
@@ -338,7 +337,6 @@ export const InspectionForm: React.FC = () => {
                 id="mercancia"
                 value={data.mercancia}
                 onChange={(e) => updateField('mercancia', e.target.value)}
-                placeholder="Harina de fuerza W270"
               />
               
             </div>
@@ -406,7 +404,6 @@ export const InspectionForm: React.FC = () => {
                 id="numeroContenedores"
                 value={data.numeroContenedores}
                 onChange={(e) => updateField('numeroContenedores', e.target.value)}
-                placeholder="1"
               />
             </div>
             <div className="space-y-2">
@@ -415,7 +412,6 @@ export const InspectionForm: React.FC = () => {
                 id="tipoContenedor"
                 value={data.tipoContenedor}
                 onChange={(e) => updateField('tipoContenedor', e.target.value)}
-                placeholder="20' DV"
               />
             </div>
           </div>
@@ -427,7 +423,6 @@ export const InspectionForm: React.FC = () => {
                 id="numeracionContenedores"
                 value={data.numeracionContenedores}
                 onChange={(e) => updateField('numeracionContenedores', e.target.value)}
-                placeholder="RFCU 227432 5"
               />
               
             </div>
@@ -440,7 +435,6 @@ export const InspectionForm: React.FC = () => {
                 id="precintosNova"
                 value={data.precintosNova}
                 onChange={(e) => updateField('precintosNova', e.target.value)}
-                placeholder="15357"
               />
             </div>
             <div className="space-y-2">
@@ -449,7 +443,6 @@ export const InspectionForm: React.FC = () => {
                 id="precintosNaviera"
                 value={data.precintosNaviera}
                 onChange={(e) => updateField('precintosNaviera', e.target.value)}
-                placeholder="ES0033566"
               />
             </div>
           </div>
@@ -461,7 +454,6 @@ export const InspectionForm: React.FC = () => {
                 id="puertos"
                 value={data.puertos}
                 onChange={(e) => updateField('puertos', e.target.value)}
-                placeholder="Barcelona/Mariel"
               />
               
             </div>
@@ -480,7 +472,6 @@ export const InspectionForm: React.FC = () => {
                 id="vendedorEmpresa"
                 value={data.vendedorEmpresa}
                 onChange={(e) => updateField('vendedorEmpresa', e.target.value)}
-                placeholder="Aldaba Business Consulting"
               />
               
             </div>
@@ -493,7 +484,6 @@ export const InspectionForm: React.FC = () => {
                 id="vendedorContacto"
                 value={data.vendedorContacto}
                 onChange={(e) => updateField('vendedorContacto', e.target.value)}
-                placeholder="Guillermo Jiménez"
               />
               
             </div>
@@ -506,7 +496,6 @@ export const InspectionForm: React.FC = () => {
                 id="vendedorDireccion"
                 value={data.vendedorDireccion}
                 onChange={(e) => updateField('vendedorDireccion', e.target.value)}
-                placeholder="Santísima Trinidad 30, 3º"
               />
               
             </div>
@@ -520,7 +509,6 @@ export const InspectionForm: React.FC = () => {
                 type="email"
                 value={data.vendedorEmail}
                 onChange={(e) => updateField('vendedorEmail', e.target.value)}
-                placeholder="g.jimenez@aldaba.pro"
               />
             </div>
             <div className="space-y-2">
@@ -529,7 +517,6 @@ export const InspectionForm: React.FC = () => {
                 id="vendedorCodPostal"
                 value={data.vendedorCodPostal}
                 onChange={(e) => updateField('vendedorCodPostal', e.target.value)}
-                placeholder="28010"
               />
             </div>
           </div>
@@ -541,7 +528,6 @@ export const InspectionForm: React.FC = () => {
                 id="vendedorPoblacion"
                 value={data.vendedorPoblacion}
                 onChange={(e) => updateField('vendedorPoblacion', e.target.value)}
-                placeholder="Madrid, España"
               />
               
             </div>
@@ -555,7 +541,6 @@ export const InspectionForm: React.FC = () => {
                 type="tel"
                 value={data.vendedorTelefono}
                 onChange={(e) => updateField('vendedorTelefono', e.target.value)}
-                placeholder="+34 91 745 14 12"
               />
             </div>
             <div className="space-y-2">
@@ -565,7 +550,6 @@ export const InspectionForm: React.FC = () => {
                 type="tel"
                 value={data.vendedorMovil}
                 onChange={(e) => updateField('vendedorMovil', e.target.value)}
-                placeholder="+34 607 711 607"
               />
             </div>
           </div>
@@ -583,7 +567,6 @@ export const InspectionForm: React.FC = () => {
                 id="compradorEmpresa"
                 value={data.compradorEmpresa}
                 onChange={(e) => updateField('compradorEmpresa', e.target.value)}
-                placeholder="Cubazucar"
               />
               
             </div>
@@ -607,7 +590,6 @@ export const InspectionForm: React.FC = () => {
                 id="compradorDireccion"
                 value={data.compradorDireccion}
                 onChange={(e) => updateField('compradorDireccion', e.target.value)}
-                placeholder="Calle 23, nº 55"
               />
               
             </div>
@@ -621,7 +603,6 @@ export const InspectionForm: React.FC = () => {
                 type="email"
                 value={data.compradorEmail}
                 onChange={(e) => updateField('compradorEmail', e.target.value)}
-                placeholder="contactos@cubazucar.cu"
               />
             </div>
             <div className="space-y-2">
@@ -641,7 +622,6 @@ export const InspectionForm: React.FC = () => {
                 id="compradorPoblacion"
                 value={data.compradorPoblacion}
                 onChange={(e) => updateField('compradorPoblacion', e.target.value)}
-                placeholder="Vedado – La Habana"
               />
               
             </div>
@@ -655,7 +635,6 @@ export const InspectionForm: React.FC = () => {
                 type="tel"
                 value={data.compradorTelefono}
                 onChange={(e) => updateField('compradorTelefono', e.target.value)}
-                placeholder="+53 783 806 06"
               />
             </div>
             <div className="space-y-2">
@@ -682,7 +661,6 @@ export const InspectionForm: React.FC = () => {
                 id="lugarInspeccion"
                 value={data.lugarInspeccion}
                 onChange={(e) => updateField('lugarInspeccion', e.target.value)}
-                placeholder="Binéfar, Huesca"
               />
               
             </div>
@@ -810,7 +788,6 @@ export const InspectionForm: React.FC = () => {
                 id="numeroBultos"
                 value={data.numeroBultos}
                 onChange={(e) => updateField('numeroBultos', e.target.value)}
-                placeholder="9 palets"
               />
               
             </div>
@@ -913,7 +890,6 @@ export const InspectionForm: React.FC = () => {
                 id="marcasDetalle"
                 value={data.marcasDetalle}
                 onChange={(e) => updateField('marcasDetalle', e.target.value)}
-                placeholder="Descripción de las marcas encontradas"
                 rows={3}
               />
               <VoiceInput onTranscript={(text) => handleVoiceInput('marcasDetalle', text)} />
@@ -944,7 +920,6 @@ export const InspectionForm: React.FC = () => {
                 id="precintadoContenedorDetalle"
                 value={data.precintadoContenedorDetalle}
                 onChange={(e) => updateField('precintadoContenedorDetalle', e.target.value)}
-                placeholder="Detalles del precintado"
                 rows={2}
               />
               <VoiceInput onTranscript={(text) => handleVoiceInput('precintadoContenedorDetalle', text)} />
@@ -972,7 +947,6 @@ export const InspectionForm: React.FC = () => {
                 id="descripcionEstibaTexto"
                 value={data.descripcionEstibaTexto}
                 onChange={(e) => updateField('descripcionEstibaTexto', e.target.value)}
-                placeholder="La fila del lado izquierdo cuenta con cinco palets, mientras que en la del lado derecho se disponen cuatro."
                 rows={3}
               />
               <VoiceInput onTranscript={(text) => handleVoiceInput('descripcionEstibaTexto', text)} />
@@ -986,7 +960,6 @@ export const InspectionForm: React.FC = () => {
                 id="otrosHallazgos"
                 value={data.otrosHallazgos}
                 onChange={(e) => updateField('otrosHallazgos', e.target.value)}
-                placeholder="No se detectan incidencias durante nuestra intervención..."
                 rows={4}
               />
               <VoiceInput onTranscript={(text) => handleVoiceInput('otrosHallazgos', text)} />
@@ -1000,7 +973,6 @@ export const InspectionForm: React.FC = () => {
                 id="conclusiones"
                 value={data.conclusiones}
                 onChange={(e) => updateField('conclusiones', e.target.value)}
-                placeholder="Basándonos en nuestra intervención y en las instrucciones especificadas..."
                 rows={4}
               />
               <VoiceInput onTranscript={(text) => handleVoiceInput('conclusiones', text)} />
@@ -1014,7 +986,6 @@ export const InspectionForm: React.FC = () => {
                 id="lugarFecha"
                 value={data.lugarFecha}
                 onChange={(e) => updateField('lugarFecha', e.target.value)}
-                placeholder="Sant Cugat del Vallès, a 29 de agosto de 2025"
               />
               
             </div>
