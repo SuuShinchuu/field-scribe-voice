@@ -13,25 +13,35 @@ interface PhotoInputProps {
 export const PhotoInput: React.FC<PhotoInputProps> = ({
   onPhotosChange,
   photos,
-  maxPhotos = 5,
+  maxPhotos = 10,
   className
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
+    const validFiles = files.filter(file => file.type.startsWith('image/'));
     
-    files.forEach(file => {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const newPhoto = e.target?.result as string;
-          if (photos.length < maxPhotos) {
-            onPhotosChange([...photos, newPhoto]);
-          }
-        };
-        reader.readAsDataURL(file);
-      }
+    if (validFiles.length === 0) return;
+    
+    const newPhotos: string[] = [];
+    let loadedCount = 0;
+    
+    validFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const newPhoto = e.target?.result as string;
+        newPhotos.push(newPhoto);
+        loadedCount++;
+        
+        // When all files are loaded, update the photos array
+        if (loadedCount === validFiles.length) {
+          const availableSlots = maxPhotos - photos.length;
+          const photosToAdd = newPhotos.slice(0, availableSlots);
+          onPhotosChange([...photos, ...photosToAdd]);
+        }
+      };
+      reader.readAsDataURL(file);
     });
     
     // Reset input

@@ -582,7 +582,6 @@ export const FieldInspectionForm: React.FC = () => {
         <div className="space-y-6">
           <div className="space-y-3">
             <Label className="text-base font-semibold">Fotos de Mercancía</Label>
-            <p className="text-sm text-muted-foreground">Máximo 10 fotos</p>
             <PhotoInput
               photos={data.fotosMercancia}
               onPhotosChange={(photos) => updateField('fotosMercancia', photos)}
@@ -591,7 +590,6 @@ export const FieldInspectionForm: React.FC = () => {
           
           <div className="space-y-3">
             <Label className="text-base font-semibold">Fotos de Marcas</Label>
-            <p className="text-sm text-muted-foreground">Máximo 10 fotos</p>
             <PhotoInput
               photos={data.fotosMarcas}
               onPhotosChange={(photos) => updateField('fotosMarcas', photos)}
@@ -600,7 +598,6 @@ export const FieldInspectionForm: React.FC = () => {
           
           <div className="space-y-3">
             <Label className="text-base font-semibold">Fotos Contenedor</Label>
-            <p className="text-sm text-muted-foreground">Máximo 10 fotos</p>
             <PhotoInput
               photos={data.fotosContenedor}
               onPhotosChange={(photos) => updateField('fotosContenedor', photos)}
