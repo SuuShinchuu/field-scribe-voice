@@ -300,7 +300,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('expedienteNova', e.target.value)}
                 placeholder="NC-CU-08223-25_ALDABA"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('expedienteNova', text)} />
+              
             </div>
           </div>
           
@@ -309,10 +309,9 @@ export const InspectionForm: React.FC = () => {
             <div className="flex gap-2">
               <Input
                 id="expedienteCliente"
-                value={data.expedienteCliente}
-                onChange={(e) => updateField('expedienteCliente', e.target.value)}
-              />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('expedienteCliente', text)} />
+              value={data.expedienteCliente}
+              onChange={(e) => updateField('expedienteCliente', e.target.value)}
+            />
             </div>
           </div>
           
@@ -341,7 +340,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('mercancia', e.target.value)}
                 placeholder="Harina de fuerza W270"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('mercancia', text)} />
+              
             </div>
           </div>
           
@@ -350,10 +349,9 @@ export const InspectionForm: React.FC = () => {
             <div className="flex gap-2">
               <Input
                 id="numeroContrato"
-                value={data.numeroContrato}
-                onChange={(e) => updateField('numeroContrato', e.target.value)}
-              />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('numeroContrato', text)} />
+              value={data.numeroContrato}
+              onChange={(e) => updateField('numeroContrato', e.target.value)}
+            />
             </div>
           </div>
           
@@ -431,7 +429,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('numeracionContenedores', e.target.value)}
                 placeholder="RFCU 227432 5"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('numeracionContenedores', text)} />
+              
             </div>
           </div>
           
@@ -465,7 +463,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('puertos', e.target.value)}
                 placeholder="Barcelona/Mariel"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('puertos', text)} />
+              
             </div>
           </div>
         </div>
@@ -484,7 +482,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('vendedorEmpresa', e.target.value)}
                 placeholder="Aldaba Business Consulting"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('vendedorEmpresa', text)} />
+              
             </div>
           </div>
           
@@ -497,7 +495,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('vendedorContacto', e.target.value)}
                 placeholder="Guillermo Jiménez"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('vendedorContacto', text)} />
+              
             </div>
           </div>
           
@@ -510,7 +508,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('vendedorDireccion', e.target.value)}
                 placeholder="Santísima Trinidad 30, 3º"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('vendedorDireccion', text)} />
+              
             </div>
           </div>
           
@@ -545,7 +543,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('vendedorPoblacion', e.target.value)}
                 placeholder="Madrid, España"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('vendedorPoblacion', text)} />
+              
             </div>
           </div>
           
@@ -587,7 +585,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('compradorEmpresa', e.target.value)}
                 placeholder="Cubazucar"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('compradorEmpresa', text)} />
+              
             </div>
           </div>
           
@@ -596,10 +594,9 @@ export const InspectionForm: React.FC = () => {
             <div className="flex gap-2">
               <Input
                 id="compradorContacto"
-                value={data.compradorContacto}
-                onChange={(e) => updateField('compradorContacto', e.target.value)}
-              />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('compradorContacto', text)} />
+              value={data.compradorContacto}
+              onChange={(e) => updateField('compradorContacto', e.target.value)}
+            />
             </div>
           </div>
           
@@ -612,7 +609,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('compradorDireccion', e.target.value)}
                 placeholder="Calle 23, nº 55"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('compradorDireccion', text)} />
+              
             </div>
           </div>
           
@@ -646,7 +643,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('compradorPoblacion', e.target.value)}
                 placeholder="Vedado – La Habana"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('compradorPoblacion', text)} />
+              
             </div>
           </div>
           
@@ -687,7 +684,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('lugarInspeccion', e.target.value)}
                 placeholder="Binéfar, Huesca"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('lugarInspeccion', text)} />
+              
             </div>
           </div>
         </div>
@@ -774,7 +771,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('numeroBultos', e.target.value)}
                 placeholder="9 palets"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('numeroBultos', text)} />
+              
             </div>
           </div>
           
@@ -978,7 +975,7 @@ export const InspectionForm: React.FC = () => {
                 onChange={(e) => updateField('lugarFecha', e.target.value)}
                 placeholder="Sant Cugat del Vallès, a 29 de agosto de 2025"
               />
-              <VoiceInput onTranscript={(text) => handleVoiceInput('lugarFecha', text)} />
+              
             </div>
           </div>
         </div>

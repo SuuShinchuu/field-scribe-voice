@@ -22,20 +22,28 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       const recognitionInstance = new SpeechRecognition();
       
-      recognitionInstance.continuous = false;
-      recognitionInstance.interimResults = false;
+      recognitionInstance.continuous = true;
+      recognitionInstance.interimResults = true;
       recognitionInstance.lang = 'es-ES';
 
       recognitionInstance.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        onTranscript(transcript);
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            transcript += event.results[i][0].transcript;
+          }
+        }
+        if (transcript) {
+          onTranscript(transcript);
+        }
       };
 
       recognitionInstance.onend = () => {
         setIsListening(false);
       };
 
-      recognitionInstance.onerror = () => {
+      recognitionInstance.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
         setIsListening(false);
       };
 
@@ -45,15 +53,20 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
 
   const toggleListening = () => {
     if (!recognition) {
-      alert('Voice recognition not supported in this browser');
+      alert('Reconocimiento de voz no soportado en este navegador');
       return;
     }
 
     if (isListening) {
       recognition.stop();
     } else {
-      recognition.start();
-      setIsListening(true);
+      try {
+        recognition.start();
+        setIsListening(true);
+      } catch (error) {
+        console.error('Error starting speech recognition:', error);
+        setIsListening(false);
+      }
     }
   };
 

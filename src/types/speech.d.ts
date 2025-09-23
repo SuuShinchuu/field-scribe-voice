@@ -4,13 +4,18 @@ interface SpeechRecognition extends EventTarget {
   lang: string;
   onresult: (event: SpeechRecognitionEvent) => void;
   onend: () => void;
-  onerror: () => void;
+  onerror: (event: SpeechRecognitionErrorEvent) => void;
   start(): void;
   stop(): void;
 }
 
+interface SpeechRecognitionErrorEvent {
+  error: string;
+}
+
 interface SpeechRecognitionEvent {
   results: SpeechRecognitionResultList;
+  resultIndex: number;
 }
 
 interface SpeechRecognitionResultList {
@@ -21,6 +26,7 @@ interface SpeechRecognitionResultList {
 
 interface SpeechRecognitionResult {
   readonly length: number;
+  readonly isFinal: boolean;
   item(index: number): SpeechRecognitionAlternative;
   [index: number]: SpeechRecognitionAlternative;
 }
