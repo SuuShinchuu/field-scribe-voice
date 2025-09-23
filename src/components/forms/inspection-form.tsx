@@ -51,31 +51,31 @@ interface InspectionData {
   // Location
   lugarInspeccion: string;
   
-  // Scope checkboxes
+  // Scope options with YES/NO/NA
   alcance: {
-    revisionContenedor: boolean;
-    conteoBultos: boolean;
-    aperturaBultos: boolean;
-    pesajeBultos: boolean;
-    embalaje: boolean;
-    paletsFumigados: boolean;
-    marcas: boolean;
-    descripcionEstiba: boolean;
-    mercanciaTrincada: boolean;
-    fechaProduccion: boolean;
-    fechaCaducidad: boolean;
-    lotes: boolean;
-    certificadosCalidad: boolean;
-    tomaMuestras: boolean;
-    pruebasLaboratorio: boolean;
-    pesajeContenedor: boolean;
-    tiqueOficial: boolean;
-    temperaturaAlmacenaje: boolean;
-    temperaturaContenedor: boolean;
-    precintadoContenedor: boolean;
-    precintadoGrupaje: boolean;
-    precintoSeguridad: boolean;
-    informeCampo: boolean;
+    revisionContenedor: 'yes' | 'no' | 'na' | '';
+    conteoBultos: 'yes' | 'no' | 'na' | '';
+    aperturaBultos: 'yes' | 'no' | 'na' | '';
+    pesajeBultos: 'yes' | 'no' | 'na' | '';
+    embalaje: 'yes' | 'no' | 'na' | '';
+    paletsFumigados: 'yes' | 'no' | 'na' | '';
+    marcas: 'yes' | 'no' | 'na' | '';
+    descripcionEstiba: 'yes' | 'no' | 'na' | '';
+    mercanciaTrincada: 'yes' | 'no' | 'na' | '';
+    fechaProduccion: 'yes' | 'no' | 'na' | '';
+    fechaCaducidad: 'yes' | 'no' | 'na' | '';
+    lotes: 'yes' | 'no' | 'na' | '';
+    certificadosCalidad: 'yes' | 'no' | 'na' | '';
+    tomaMuestras: 'yes' | 'no' | 'na' | '';
+    pruebasLaboratorio: 'yes' | 'no' | 'na' | '';
+    pesajeContenedor: 'yes' | 'no' | 'na' | '';
+    tiqueOficial: 'yes' | 'no' | 'na' | '';
+    temperaturaAlmacenaje: 'yes' | 'no' | 'na' | '';
+    temperaturaContenedor: 'yes' | 'no' | 'na' | '';
+    precintadoContenedor: 'yes' | 'no' | 'na' | '';
+    precintadoGrupaje: 'yes' | 'no' | 'na' | '';
+    precintoSeguridad: 'yes' | 'no' | 'na' | '';
+    informeCampo: 'yes' | 'no' | 'na' | '';
   };
   
   // Findings
@@ -178,29 +178,29 @@ const initialData: InspectionData = {
   compradorMovil: '',
   lugarInspeccion: '',
   alcance: {
-    revisionContenedor: false,
-    conteoBultos: false,
-    aperturaBultos: false,
-    pesajeBultos: false,
-    embalaje: false,
-    paletsFumigados: false,
-    marcas: false,
-    descripcionEstiba: false,
-    mercanciaTrincada: false,
-    fechaProduccion: false,
-    fechaCaducidad: false,
-    lotes: false,
-    certificadosCalidad: false,
-    tomaMuestras: false,
-    pruebasLaboratorio: false,
-    pesajeContenedor: false,
-    tiqueOficial: false,
-    temperaturaAlmacenaje: false,
-    temperaturaContenedor: false,
-    precintadoContenedor: false,
-    precintadoGrupaje: false,
-    precintoSeguridad: false,
-    informeCampo: false,
+    revisionContenedor: '',
+    conteoBultos: '',
+    aperturaBultos: '',
+    pesajeBultos: '',
+    embalaje: '',
+    paletsFumigados: '',
+    marcas: '',
+    descripcionEstiba: '',
+    mercanciaTrincada: '',
+    fechaProduccion: '',
+    fechaCaducidad: '',
+    lotes: '',
+    certificadosCalidad: '',
+    tomaMuestras: '',
+    pruebasLaboratorio: '',
+    pesajeContenedor: '',
+    tiqueOficial: '',
+    temperaturaAlmacenaje: '',
+    temperaturaContenedor: '',
+    precintadoContenedor: '',
+    precintadoGrupaje: '',
+    precintoSeguridad: '',
+    informeCampo: '',
   },
   revisionContenedores: {
     limpios: false,
@@ -721,15 +721,56 @@ export const InspectionForm: React.FC = () => {
               { key: 'precintoSeguridad', label: 'Precinto de seguridad "barra a barra"' },
               { key: 'informeCampo', label: 'Se puede entregar Informe de Campo' }
             ].map(item => (
-              <div key={item.key} className="flex items-center space-x-3 p-3 border rounded-lg">
-                <Checkbox
-                  id={item.key}
-                  checked={data.alcance[item.key as keyof typeof data.alcance]}
-                  onCheckedChange={(checked) => updateNestedField('alcance', item.key, checked)}
-                />
-                <Label htmlFor={item.key} className="flex-1 text-sm leading-relaxed">
-                  {item.label}
-                </Label>
+              <div key={item.key} className="p-3 border rounded-lg">
+                <div className="flex items-start justify-between gap-4">
+                  <Label className="flex-1 text-sm leading-relaxed font-medium">
+                    {item.label}
+                  </Label>
+                  <div className="flex gap-3 min-w-[180px]">
+                    <div className="flex items-center space-x-1">
+                      <input
+                        type="radio"
+                        id={`${item.key}-yes`}
+                        name={item.key}
+                        value="yes"
+                        checked={data.alcance[item.key as keyof typeof data.alcance] === 'yes'}
+                        onChange={() => updateNestedField('alcance', item.key, 'yes')}
+                        className="w-3 h-3 text-primary"
+                      />
+                      <Label htmlFor={`${item.key}-yes`} className="text-xs font-medium text-green-700">
+                        YES
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <input
+                        type="radio"
+                        id={`${item.key}-no`}
+                        name={item.key}
+                        value="no"
+                        checked={data.alcance[item.key as keyof typeof data.alcance] === 'no'}
+                        onChange={() => updateNestedField('alcance', item.key, 'no')}
+                        className="w-3 h-3 text-primary"
+                      />
+                      <Label htmlFor={`${item.key}-no`} className="text-xs font-medium text-red-700">
+                        NO
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <input
+                        type="radio"
+                        id={`${item.key}-na`}
+                        name={item.key}
+                        value="na"
+                        checked={data.alcance[item.key as keyof typeof data.alcance] === 'na'}
+                        onChange={() => updateNestedField('alcance', item.key, 'na')}
+                        className="w-3 h-3 text-primary"
+                      />
+                      <Label htmlFor={`${item.key}-na`} className="text-xs font-medium text-gray-600">
+                        NA
+                      </Label>
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
