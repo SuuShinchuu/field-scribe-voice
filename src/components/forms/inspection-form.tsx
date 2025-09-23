@@ -264,10 +264,34 @@ const initialData: InspectionData = {
 
 export const InspectionForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [showImportOptions, setShowImportOptions] = useState(false);
   const [data, setData] = useState<InspectionData>(initialData);
 
   const updateField = (field: string, value: any) => {
     setData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const importFromFieldReport = () => {
+    const fieldReportData = localStorage.getItem('fieldInspectionData');
+    if (fieldReportData) {
+      const fieldReport = JSON.parse(fieldReportData);
+      setData(prev => ({
+        ...prev,
+        expedienteNova: fieldReport.expedienteNova || prev.expedienteNova,
+        expedienteCliente: fieldReport.referenciaCliente || prev.expedienteCliente,
+        fechaInspeccion: fieldReport.fecha || prev.fechaInspeccion,
+        numeroContrato: fieldReport.numeroContrato || prev.numeroContrato,
+        numeroContenedores: fieldReport.numeroContenedor || prev.numeroContenedores,
+        tipoContenedor: fieldReport.tipoContenedor || prev.tipoContenedor,
+        numeracionContenedores: fieldReport.numeroContenedor || prev.numeracionContenedores,
+        precintosNova: fieldReport.precintoNova || prev.precintosNova,
+        precintosNaviera: fieldReport.precintoNaviera || prev.precintosNaviera,
+        vendedorEmpresa: fieldReport.exportador || prev.vendedorEmpresa,
+        vendedorContacto: fieldReport.personaContacto || prev.vendedorContacto,
+        lugarInspeccion: fieldReport.lugarInspeccion || prev.lugarInspeccion,
+      }));
+      setShowImportOptions(false);
+    }
   };
 
   const updateNestedField = (parent: keyof InspectionData, field: string, value: any) => {
@@ -1044,6 +1068,39 @@ export const InspectionForm: React.FC = () => {
             </div>
           </CardHeader>
         </Card>
+
+        {currentStep === 0 && !showImportOptions && (
+          <div className="mb-6">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowImportOptions(true)}
+              className="w-full"
+            >
+              Importar datos de Informe de Campo
+            </Button>
+          </div>
+        )}
+
+        {showImportOptions && (
+          <Card className="mb-6">
+            <CardHeader>
+              <CardTitle>Importar Datos</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
+                ¿Desea importar los datos guardados del Informe de Campo?
+              </p>
+              <div className="flex gap-2">
+                <Button onClick={importFromFieldReport}>
+                  Sí, importar datos
+                </Button>
+                <Button variant="outline" onClick={() => setShowImportOptions(false)}>
+                  No, continuar sin importar
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <Card>
           <CardHeader>

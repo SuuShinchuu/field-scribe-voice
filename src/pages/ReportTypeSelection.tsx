@@ -18,6 +18,25 @@ const ReportTypeSelection: React.FC = () => {
         </div>
         
         <div className="grid md:grid-cols-3 gap-6">
+          <Link to="/orden-trabajo" className="block">
+            <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
+                  <Clipboard className="w-8 h-8 text-blue-500" />
+                </div>
+                <CardTitle className="text-xl">Orden de Trabajo</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <p className="text-muted-foreground mb-6 text-sm">
+                  Crear una nueva orden de trabajo de inspección con alcance detallado
+                </p>
+                <Button className="w-full">
+                  Crear Orden de Trabajo
+                </Button>
+              </CardContent>
+            </Card>
+          </Link>
+
           <Card className="hover:shadow-lg transition-shadow cursor-pointer group">
             <CardHeader className="text-center pb-4">
               <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
@@ -51,25 +70,6 @@ const ReportTypeSelection: React.FC = () => {
                 </p>
                 <Button className="w-full">
                   Crear Informe Final
-                </Button>
-              </CardContent>
-            </Card>
-          </Link>
-
-          <Link to="/orden-trabajo" className="block">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer group h-full">
-              <CardHeader className="text-center pb-4">
-                <div className="mx-auto w-16 h-16 bg-blue-500/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-500/20 transition-colors">
-                  <Clipboard className="w-8 h-8 text-blue-500" />
-                </div>
-                <CardTitle className="text-xl">Orden de Trabajo</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center">
-                <p className="text-muted-foreground mb-6 text-sm">
-                  Crear una nueva orden de trabajo de inspección con alcance detallado
-                </p>
-                <Button className="w-full">
-                  Crear Orden de Trabajo
                 </Button>
               </CardContent>
             </Card>

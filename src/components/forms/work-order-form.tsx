@@ -758,16 +758,20 @@ export const WorkOrderForm: React.FC = () => {
           )}
           
           <Button
-            onClick={nextStep}
+            onClick={currentStep === steps.length - 1 ? () => {
+              localStorage.setItem('workOrderData', JSON.stringify(data));
+              console.log('Orden de trabajo guardada:', data);
+              alert('Orden de trabajo guardada exitosamente');
+            } : nextStep}
             disabled={currentStep === steps.length - 1}
             className="flex-1 max-w-xs"
           >
-            {currentStep === steps.length - 1 ? (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Guardar Orden
-              </>
-            ) : (
+             {currentStep === steps.length - 1 ? (
+               <>
+                 <Save className="h-4 w-4 mr-2" />
+                 Guardar Orden
+               </>
+             ) : (
               <>
                 Siguiente
                 <ChevronRight className="h-4 w-4 ml-2" />

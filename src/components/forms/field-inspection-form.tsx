@@ -126,10 +126,33 @@ const initialData: FieldInspectionData = {
 
 export const FieldInspectionForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
+  const [showImportOptions, setShowImportOptions] = useState(false);
   const [data, setData] = useState<FieldInspectionData>(initialData);
 
   const updateField = (field: string, value: any) => {
     setData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const importFromWorkOrder = () => {
+    const workOrderData = localStorage.getItem('workOrderData');
+    if (workOrderData) {
+      const workOrder = JSON.parse(workOrderData);
+      setData(prev => ({
+        ...prev,
+        expedienteNova: workOrder.expedienteNova || prev.expedienteNova,
+        codigoInspector: workOrder.codigoInspector || prev.codigoInspector,
+        paisDestino: workOrder.paisDestino || prev.paisDestino,
+        referenciaCliente: workOrder.expedienteCliente || prev.referenciaCliente,
+        numeroContrato: workOrder.numeroContrato || prev.numeroContrato,
+        exportador: workOrder.exportador || prev.exportador,
+        personaContacto: workOrder.personaContacto || prev.personaContacto,
+        lugarInspeccion: workOrder.lugarInspeccion || prev.lugarInspeccion,
+        poblacion: workOrder.poblacion || prev.poblacion,
+        provincia: workOrder.provincia || prev.provincia,
+        fecha: workOrder.fechaInspeccion || prev.fecha,
+      }));
+      setShowImportOptions(false);
+    }
   };
 
   const updateNestedField = (parent: keyof FieldInspectionData, field: string, value: any) => {
