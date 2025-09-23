@@ -74,8 +74,9 @@ interface FieldInspectionData {
   otros: string;
   
   // Photos
-  fotos: string[];
-  fotosFirma: string[];
+  fotosMercancia: string[];
+  fotosMarcas: string[];
+  fotosContenedor: string[];
 }
 
 const initialData: FieldInspectionData = {
@@ -118,8 +119,9 @@ const initialData: FieldInspectionData = {
   pesoBruto: '',
   estiba: '',
   otros: '',
-  fotos: [],
-  fotosFirma: [],
+  fotosMercancia: [],
+  fotosMarcas: [],
+  fotosContenedor: [],
 };
 
 export const FieldInspectionForm: React.FC = () => {
@@ -577,20 +579,31 @@ export const FieldInspectionForm: React.FC = () => {
     {
       title: "Documentación Fotográfica",
       component: (
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label>Fotos de la Inspección</Label>
+        <div className="space-y-6">
+          <div className="space-y-3">
+            <Label className="text-base font-semibold">Fotos de Mercancía</Label>
+            <p className="text-sm text-muted-foreground">Máximo 10 fotos</p>
             <PhotoInput
-              photos={data.fotos}
-              onPhotosChange={(photos) => updateField('fotos', photos)}
+              photos={data.fotosMercancia}
+              onPhotosChange={(photos) => updateField('fotosMercancia', photos)}
             />
           </div>
           
-          <div className="space-y-2">
-            <Label>Fotos de Firmas y Documentos</Label>
+          <div className="space-y-3">
+            <Label className="text-base font-semibold">Fotos de Marcas</Label>
+            <p className="text-sm text-muted-foreground">Máximo 10 fotos</p>
             <PhotoInput
-              photos={data.fotosFirma}
-              onPhotosChange={(photos) => updateField('fotosFirma', photos)}
+              photos={data.fotosMarcas}
+              onPhotosChange={(photos) => updateField('fotosMarcas', photos)}
+            />
+          </div>
+          
+          <div className="space-y-3">
+            <Label className="text-base font-semibold">Fotos Contenedor</Label>
+            <p className="text-sm text-muted-foreground">Máximo 10 fotos</p>
+            <PhotoInput
+              photos={data.fotosContenedor}
+              onPhotosChange={(photos) => updateField('fotosContenedor', photos)}
             />
           </div>
         </div>
