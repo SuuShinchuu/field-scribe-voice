@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { VoiceInput } from '@/components/ui/voice-input';
 import { PhotoInput } from '@/components/ui/photo-input';
-import { ChevronLeft, ChevronRight, Save, FileText } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, FileText, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface InspectionData {
@@ -1054,15 +1055,23 @@ export const InspectionForm: React.FC = () => {
         </Card>
 
         <div className="flex justify-between mt-6 gap-4">
-          <Button
-            onClick={prevStep}
-            disabled={currentStep === 0}
-            variant="outline"
-            className="flex-1"
-          >
-            <ChevronLeft className="h-4 w-4 mr-2" />
-            Anterior
-          </Button>
+          {currentStep === 0 ? (
+            <Link to="/" className="flex-1">
+              <Button variant="outline" className="w-full">
+                <Home className="h-4 w-4 mr-2" />
+                Volver al Inicio
+              </Button>
+            </Link>
+          ) : (
+            <Button
+              onClick={prevStep}
+              variant="outline"
+              className="flex-1"
+            >
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Anterior
+            </Button>
+          )}
           <Button
             onClick={nextStep}
             disabled={currentStep === steps.length - 1}

@@ -1,7 +1,7 @@
-import { InspectionForm } from '@/components/forms/inspection-form';
+import ReportTypeSelection from './ReportTypeSelection';
 
 const Index = () => {
-  return <InspectionForm />;
+  return <ReportTypeSelection />;
 };
 
 export default Index;
