@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Home, Save, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -48,30 +49,46 @@ interface WorkOrderData {
   puertoAeropuertoDestino: string;
   buque: string;
   
-  // Supervision Scope
-  revisionEstadoContenedor: boolean;
-  conteoBultos: boolean;
-  aperturaBultos: string; // SÍ/NO/N/A
+  // Supervision Scope (all SI/NO/N/A)
+  revisionEstadoContenedor: string;
+  conteoBultos: string;
+  aperturaBultos: string;
   pesajeBultos: string;
-  embalaje: boolean;
-  paletsFumigados: boolean;
-  marcas: boolean;
-  descripcionEstiba: boolean;
-  mercanciaTrincaContenedor: boolean;
-  fechaProduccion: boolean;
-  fechaCaducidad: boolean;
-  lotes: boolean;
-  certificadosCalidad: boolean;
-  tomaMuestras: boolean;
-  pruebasLaboratorio: boolean;
-  pesajeContenedor: boolean;
-  tiqueOficialPesaje: boolean;
-  temperaturaAlmacenajePrevio: boolean;
-  temperaturaContenedor: boolean;
-  precintadoContenedor: boolean;
-  precintadoGrupaje: boolean;
-  precintoSeguridadBarra: boolean;
-  puedeEntregarInformeCampo: boolean;
+  embalaje: string;
+  paletsFumigados: string;
+  marcas: string;
+  descripcionEstiba: string;
+  mercanciaTrincaContenedor: string;
+  fechaProduccion: string;
+  fechaCaducidad: string;
+  lotes: string;
+  certificadosCalidad: string;
+  tomaMuestras: string;
+  pruebasLaboratorio: string;
+  pesajeContenedor: string;
+  tiqueOficialPesaje: string;
+  temperaturaAlmacenajePrevio: string;
+  temperaturaContenedor: string;
+  precintadoContenedor: string;
+  precintadoGrupaje: string;
+  precintoSeguridadBarra: string;
+  puedeEntregarInformeCampo: string;
+
+  // Inspection Criteria
+  criteriosCantidad: string;
+  criteriosApertura: string;
+  criteriosPeso: string;
+  criteriosEmbalaje: string;
+  criteriosMarcas: string;
+  criteriosEstiba: string;
+  criteriosFechasProduccion: string;
+  criteriosCalidad: string;
+  criteriosMuestreo: string;
+  criteriosTemperatura: string;
+  criteriosRechazo: string;
+  
+  // Final observations
+  observacionesFinales: string;
   
   // Additional Notes
   observacionesEspeciales: string;
@@ -106,30 +123,42 @@ const initialData: WorkOrderData = {
   puertoAeropuertoOrigen: '',
   puertoAeropuertoDestino: '',
   buque: '',
-  revisionEstadoContenedor: false,
-  conteoBultos: false,
+  revisionEstadoContenedor: 'NO',
+  conteoBultos: 'NO',
   aperturaBultos: 'NO',
   pesajeBultos: 'NO',
-  embalaje: false,
-  paletsFumigados: false,
-  marcas: false,
-  descripcionEstiba: false,
-  mercanciaTrincaContenedor: false,
-  fechaProduccion: false,
-  fechaCaducidad: false,
-  lotes: false,
-  certificadosCalidad: false,
-  tomaMuestras: false,
-  pruebasLaboratorio: false,
-  pesajeContenedor: false,
-  tiqueOficialPesaje: false,
-  temperaturaAlmacenajePrevio: false,
-  temperaturaContenedor: false,
-  precintadoContenedor: false,
-  precintadoGrupaje: false,
-  precintoSeguridadBarra: false,
-  puedeEntregarInformeCampo: false,
-  observacionesEspeciales: ''
+  embalaje: 'NO',
+  paletsFumigados: 'NO',
+  marcas: 'NO',
+  descripcionEstiba: 'NO',
+  mercanciaTrincaContenedor: 'NO',
+  fechaProduccion: 'NO',
+  fechaCaducidad: 'NO',
+  lotes: 'NO',
+  certificadosCalidad: 'NO',
+  tomaMuestras: 'NO',
+  pruebasLaboratorio: 'NO',
+  pesajeContenedor: 'NO',
+  tiqueOficialPesaje: 'NO',
+  temperaturaAlmacenajePrevio: 'NO',
+  temperaturaContenedor: 'NO',
+  precintadoContenedor: 'NO',
+  precintadoGrupaje: 'NO',
+  precintoSeguridadBarra: 'NO',
+  puedeEntregarInformeCampo: 'NO',
+  criteriosCantidad: 'N/A',
+  criteriosApertura: 'N/A',
+  criteriosPeso: 'N/A',
+  criteriosEmbalaje: 'N/A',
+  criteriosMarcas: 'N/A',
+  criteriosEstiba: 'N/A',
+  criteriosFechasProduccion: 'N/A',
+  criteriosCalidad: 'N/A',
+  criteriosMuestreo: 'N/A',
+  criteriosTemperatura: 'N/A',
+  criteriosRechazo: 'N/A',
+  observacionesEspeciales: '',
+  observacionesFinales: ''
 };
 
 export const WorkOrderForm: React.FC = () => {
@@ -262,15 +291,6 @@ export const WorkOrderForm: React.FC = () => {
               />
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="horaInspeccion">Hora Inspección</Label>
-              <Input
-                id="horaInspeccion"
-                type="time"
-                value={data.horaInspeccion}
-                onChange={(e) => updateField('horaInspeccion', e.target.value)}
-              />
-            </div>
           </div>
         </div>
       )
@@ -424,6 +444,16 @@ export const WorkOrderForm: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div className="space-y-2">
+              <Label htmlFor="horaInspeccion">Hora Inspección</Label>
+              <Input
+                id="horaInspeccion"
+                type="time"
+                value={data.horaInspeccion}
+                onChange={(e) => updateField('horaInspeccion', e.target.value)}
+              />
+            </div>
+            
+            <div className="space-y-2">
               <Label htmlFor="cantidadTipoContenedor">Cantidad y Tipo de Contenedor</Label>
               <Input
                 id="cantidadTipoContenedor"
@@ -492,10 +522,12 @@ export const WorkOrderForm: React.FC = () => {
       title: "Alcance de Supervisión",
       component: (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-6">
             {[
               { key: 'revisionEstadoContenedor', label: 'Revisión del estado del contenedor' },
               { key: 'conteoBultos', label: 'Conteo de bultos' },
+              { key: 'aperturaBultos', label: 'Apertura de bultos' },
+              { key: 'pesajeBultos', label: 'Pesaje de bultos' },
               { key: 'embalaje', label: 'Embalaje' },
               { key: 'paletsFumigados', label: 'Palets fumigados' },
               { key: 'marcas', label: 'Marcas' },
@@ -516,17 +548,134 @@ export const WorkOrderForm: React.FC = () => {
               { key: 'precintoSeguridadBarra', label: 'Precinto de seguridad "barra a barra"' },
               { key: 'puedeEntregarInformeCampo', label: 'Se puede entregar Informe de Campo' }
             ].map((item) => (
-              <div key={item.key} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
-                <Checkbox
-                  id={item.key}
-                  checked={data[item.key as keyof WorkOrderData] as boolean}
-                  onCheckedChange={(checked) => updateField(item.key as keyof WorkOrderData, checked)}
-                />
-                <Label htmlFor={item.key} className="flex-1 text-sm cursor-pointer">
-                  {item.label}
-                </Label>
+              <div key={item.key} className="p-4 border rounded-lg hover:bg-muted/50 transition-colors">
+                <div className="flex items-center justify-between mb-2">
+                  <Label className="text-sm font-medium">
+                    {item.label}
+                  </Label>
+                </div>
+                <RadioGroup
+                  value={data[item.key as keyof WorkOrderData] as string}
+                  onValueChange={(value) => updateField(item.key as keyof WorkOrderData, value)}
+                  className="flex gap-6"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="SÍ" id={`${item.key}-si`} />
+                    <Label htmlFor={`${item.key}-si`}>SÍ</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="NO" id={`${item.key}-no`} />
+                    <Label htmlFor={`${item.key}-no`}>NO</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="N/A" id={`${item.key}-na`} />
+                    <Label htmlFor={`${item.key}-na`}>N/A</Label>
+                  </div>
+                </RadioGroup>
               </div>
             ))}
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "Criterios de Inspección",
+      component: (
+        <div className="space-y-6">
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse border border-border">
+              <thead>
+                <tr className="bg-muted/50">
+                  <th className="border border-border p-3 text-left font-semibold">Concepto</th>
+                  <th className="border border-border p-3 text-left font-semibold">Notas</th>
+                  <th className="border border-border p-3 text-left font-semibold">Requerido</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  {
+                    key: 'criteriosCantidad',
+                    concepto: 'Cantidad',
+                    notas: 'Unidades, bultos, palets, peso, etc. según contrato compraventa',
+                    placeholder: 'Verificar cantidad contra la lista de contenido.'
+                  },
+                  {
+                    key: 'criteriosApertura',
+                    concepto: 'Apertura y revisión bultos',
+                    notas: 'Términos en que se debe revisar al detalle según protocolo y contrato compraventa',
+                    placeholder: 'N/A'
+                  },
+                  {
+                    key: 'criteriosPeso',
+                    concepto: 'Peso',
+                    notas: 'Peso en Kg o Tm según contrato compraventa',
+                    placeholder: 'N/A'
+                  },
+                  {
+                    key: 'criteriosEmbalaje',
+                    concepto: 'Embalaje',
+                    notas: 'Tipo de material, forma, ensamblaje, cierre, dimensiones, etc.',
+                    placeholder: 'Describir al detalle.'
+                  },
+                  {
+                    key: 'criteriosMarcas',
+                    concepto: 'Marcas',
+                    notas: 'Marcas y señales que deben aparecer en el embalaje',
+                    placeholder: 'Fotografiar al detalle. Ver final de este documento las marcas solicitadas por el importador.'
+                  },
+                  {
+                    key: 'criteriosEstiba',
+                    concepto: 'Estiba y trincaje',
+                    notas: 'Forma en que se debe estibar la carga y los medios auxiliares de sujeción y trincaje',
+                    placeholder: 'Describir disposición de la mercancía en el palet y/o tomar fotografías de los 5 lados posibles.'
+                  },
+                  {
+                    key: 'criteriosFechasProduccion',
+                    concepto: 'Fechas de Producción',
+                    notas: 'Verificar fechas de producción de cada lote',
+                    placeholder: 'N/A'
+                  },
+                  {
+                    key: 'criteriosCalidad',
+                    concepto: 'Calidad',
+                    notas: 'Especificaciones para análisis en laboratorio o características visuales a verificar',
+                    placeholder: 'N/A'
+                  },
+                  {
+                    key: 'criteriosMuestreo',
+                    concepto: 'Muestreo',
+                    notas: 'Norma internacional de muestreo a aplicar o % de unidades a muestrear',
+                    placeholder: 'N/A'
+                  },
+                  {
+                    key: 'criteriosTemperatura',
+                    concepto: 'Temperatura',
+                    notas: 'Verificar temperatura',
+                    placeholder: 'N/A'
+                  },
+                  {
+                    key: 'criteriosRechazo',
+                    concepto: 'Criterios de rechazo',
+                    notas: 'Según solicitado por principal o contrato de compraventa',
+                    placeholder: 'No detallados, pero por favor se debe reportar cualquier incidencia antes de abandonar el lugar de inspección'
+                  }
+                ].map((item) => (
+                  <tr key={item.key} className="hover:bg-muted/30">
+                    <td className="border border-border p-3 font-medium">{item.concepto}</td>
+                    <td className="border border-border p-3 text-sm text-muted-foreground">{item.notas}</td>
+                    <td className="border border-border p-3">
+                      <Textarea
+                        value={data[item.key as keyof WorkOrderData] as string}
+                        onChange={(e) => updateField(item.key as keyof WorkOrderData, e.target.value)}
+                        placeholder={item.placeholder}
+                        rows={3}
+                        className="min-h-[80px] resize-none"
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )
@@ -543,6 +692,17 @@ export const WorkOrderForm: React.FC = () => {
               onChange={(e) => updateField('observacionesEspeciales', e.target.value)}
               rows={8}
               placeholder="OJO, hacer reportaje fotográfico muy completo, se trata de un grupaje y es la única forma de que nuestro informe final sea exhaustivo. Describir bien el embalaje y sus materiales, así como las marcas que acompañan el envío. Gracias."
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="observacionesFinales">Observaciones Finales</Label>
+            <Textarea
+              id="observacionesFinales"
+              value={data.observacionesFinales}
+              onChange={(e) => updateField('observacionesFinales', e.target.value)}
+              rows={6}
+              placeholder="Comentarios adicionales y observaciones finales sobre la inspección..."
             />
           </div>
         </div>
