@@ -1047,7 +1047,15 @@ export const InspectionForm: React.FC = () => {
                 <FileText className="h-5 w-5 text-primary" />
                 Informe de Inspección
               </CardTitle>
-              <Button onClick={saveData} variant="outline" size="sm">
+              <Button 
+                onClick={() => {
+                  localStorage.setItem('inspectionData', JSON.stringify(data));
+                  console.log('Datos guardados:', data);
+                  alert('Datos guardados exitosamente');
+                }} 
+                variant="outline" 
+                size="sm"
+              >
                 <Save className="h-4 w-4 mr-2" />
                 Guardar
               </Button>
@@ -1130,12 +1138,24 @@ export const InspectionForm: React.FC = () => {
             </Button>
           )}
           <Button
-            onClick={nextStep}
-            disabled={currentStep === steps.length - 1}
+            onClick={currentStep === steps.length - 1 ? () => {
+              localStorage.setItem('inspectionData', JSON.stringify(data));
+              console.log('Informe final guardado:', data);
+              alert('Informe final guardado exitosamente');
+            } : nextStep}
             className="flex-1"
           >
-            Siguiente
-            <ChevronRight className="h-4 w-4 ml-2" />
+            {currentStep === steps.length - 1 ? (
+              <>
+                <Save className="h-4 w-4 mr-2" />
+                Guardar Informe
+              </>
+            ) : (
+              <>
+                Siguiente
+                <ChevronRight className="h-4 w-4 ml-2" />
+              </>
+            )}
           </Button>
         </div>
       </div>

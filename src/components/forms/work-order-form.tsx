@@ -728,10 +728,24 @@ export const WorkOrderForm: React.FC = () => {
 
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="text-xl flex items-center gap-2">
-              <FileText className="h-6 w-6" />
-              {steps[currentStep].title}
-            </CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-xl flex items-center gap-2">
+                <FileText className="h-6 w-6" />
+                {steps[currentStep].title}
+              </CardTitle>
+              <Button 
+                onClick={() => {
+                  localStorage.setItem('workOrderData', JSON.stringify(data));
+                  console.log('Datos guardados:', data);
+                  alert('Datos guardados exitosamente');
+                }} 
+                variant="outline" 
+                size="sm"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Guardar
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="p-8">
             {steps[currentStep].component}
@@ -763,7 +777,6 @@ export const WorkOrderForm: React.FC = () => {
               console.log('Orden de trabajo guardada:', data);
               alert('Orden de trabajo guardada exitosamente');
             } : nextStep}
-            disabled={currentStep === steps.length - 1}
             className="flex-1 max-w-xs"
           >
              {currentStep === steps.length - 1 ? (

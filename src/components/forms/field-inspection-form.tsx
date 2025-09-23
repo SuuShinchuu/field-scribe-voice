@@ -675,8 +675,11 @@ export const FieldInspectionForm: React.FC = () => {
             </Button>
           )}
           <Button
-            onClick={nextStep}
-            disabled={currentStep === steps.length - 1}
+            onClick={currentStep === steps.length - 1 ? () => {
+              localStorage.setItem('fieldInspectionData', JSON.stringify(data));
+              console.log('Informe de campo guardado:', data);
+              alert('Informe de campo guardado exitosamente');
+            } : nextStep}
             className="flex-1"
           >
             {currentStep === steps.length - 1 ? (
