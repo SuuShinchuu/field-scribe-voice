@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from './button';
-import { Mic, MicOff } from 'lucide-react';
+import { Mic, Square } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface VoiceInputProps {
@@ -60,13 +60,23 @@ export const VoiceInput: React.FC<VoiceInputProps> = ({
   return (
     <Button
       type="button"
-      variant={isListening ? "destructive" : "outline"}
+      variant={isListening ? "default" : "outline"}
       size="sm"
       onClick={toggleListening}
       disabled={disabled || !recognition}
-      className={cn("shrink-0", className)}
+      className={cn(
+        "shrink-0 transition-all duration-200",
+        isListening 
+          ? "bg-red-500 hover:bg-red-600 text-white animate-pulse shadow-lg shadow-red-500/25" 
+          : "hover:bg-primary hover:text-primary-foreground",
+        className
+      )}
     >
-      {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+      {isListening ? (
+        <Square className="h-4 w-4" />
+      ) : (
+        <Mic className="h-4 w-4" />
+      )}
     </Button>
   );
 };
