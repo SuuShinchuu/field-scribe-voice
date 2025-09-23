@@ -29,9 +29,11 @@ const ReportTypeSelection: React.FC = () => {
               <p className="text-muted-foreground mb-6">
                 Informe preliminar realizado directamente en el lugar de inspección
               </p>
-              <Button variant="outline" className="w-full" disabled>
-                Próximamente
-              </Button>
+              <Link to="/informe-campo" className="block">
+                <Button className="w-full">
+                  Crear Informe de Campo
+                </Button>
+              </Link>
             </CardContent>
           </Card>
 
