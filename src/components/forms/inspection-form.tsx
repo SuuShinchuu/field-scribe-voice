@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { VoiceInput } from '@/components/ui/voice-input';
 import { PhotoInput } from '@/components/ui/photo-input';
-import { ChevronLeft, ChevronRight, Save, FileText, Home } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface InspectionData {
@@ -1047,18 +1047,26 @@ export const InspectionForm: React.FC = () => {
                 <FileText className="h-5 w-5 text-primary" />
                 Informe de Inspección
               </CardTitle>
-              <Button 
-                onClick={() => {
-                  localStorage.setItem('inspectionData', JSON.stringify(data));
-                  console.log('Datos guardados:', data);
-                  alert('Datos guardados exitosamente');
-                }} 
-                variant="outline" 
-                size="sm"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Guardar
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => {
+                    localStorage.setItem('inspectionData', JSON.stringify(data));
+                    console.log('Datos guardados:', data);
+                    alert('Datos guardados exitosamente');
+                  }} 
+                  variant="outline" 
+                  size="sm"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Guardar
+                </Button>
+                <Link to="/">
+                  <Button variant="outline" size="sm">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Menú Principal
+                  </Button>
+                </Link>
+              </div>
             </div>
             <div className="flex items-center justify-between text-sm text-muted-foreground">
               <span>Paso {currentStep + 1} de {steps.length}</span>

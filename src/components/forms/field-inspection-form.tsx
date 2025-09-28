@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { VoiceInput } from '@/components/ui/voice-input';
 import { PhotoInput } from '@/components/ui/photo-input';
-import { ChevronLeft, ChevronRight, Save, FileText, Home } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, FileText, Home, Download, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface FieldInspectionData {
@@ -647,9 +647,71 @@ export const FieldInspectionForm: React.FC = () => {
           </div>
         </div>
 
+        {currentStep === 0 && (
+          <Card className="mb-4">
+            <CardContent className="p-4">
+              <Button
+                onClick={() => {
+                  const workOrderData = localStorage.getItem('workOrderData');
+                  if (workOrderData) {
+                    const workOrder = JSON.parse(workOrderData);
+                    setData(prev => ({
+                      ...prev,
+                      expedienteNova: workOrder.expedienteNova || prev.expedienteNova,
+                      fecha: workOrder.fechaInspeccion || prev.fecha,
+                      codigoInspector: workOrder.codigoInspector || prev.codigoInspector,
+                      paisDestino: workOrder.paisDestino || prev.paisDestino,
+                      referenciaCliente: workOrder.expedienteCliente || prev.referenciaCliente,
+                      numeroContrato: workOrder.numeroContrato || prev.numeroContrato,
+                      exportador: workOrder.exportador || prev.exportador,
+                      personaContacto: workOrder.personaContacto || prev.personaContacto,
+                      lugarInspeccion: workOrder.lugarInspeccion || prev.lugarInspeccion,
+                      poblacion: workOrder.poblacion || prev.poblacion,
+                      provincia: workOrder.provincia || prev.provincia,
+                      horaInicio: workOrder.horaInspeccion || prev.horaInicio,
+                      mercanciaDeclarada: workOrder.descripcionMercancia || prev.mercanciaDeclarada,
+                      puertoOrigen: workOrder.puertoAeropuertoOrigen || prev.puertoOrigen,
+                      puertoDestino: workOrder.puertoAeropuertoDestino || prev.puertoDestino,
+                    }));
+                    alert('Datos de Orden de Trabajo cargados exitosamente');
+                  } else {
+                    alert('No hay datos de Orden de Trabajo guardados');
+                  }
+                }}
+                variant="outline"
+                className="w-full bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Cargar datos de Orden de Trabajo
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">{steps[currentStep].title}</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-lg">{steps[currentStep].title}</CardTitle>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => {
+                    localStorage.setItem('fieldInspectionData', JSON.stringify(data));
+                    alert('Datos guardados exitosamente');
+                  }} 
+                  variant="outline" 
+                  size="sm"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Guardar
+                </Button>
+                <Link to="/">
+                  <Button variant="outline" size="sm">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Menú Principal
+                  </Button>
+                </Link>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             {steps[currentStep].component}

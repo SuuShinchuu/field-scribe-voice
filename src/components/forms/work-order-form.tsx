@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Home, Save, FileText, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Home, Save, FileText, ChevronLeft, ChevronRight, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface WorkOrderData {
@@ -733,18 +733,26 @@ export const WorkOrderForm: React.FC = () => {
                 <FileText className="h-6 w-6" />
                 {steps[currentStep].title}
               </CardTitle>
-              <Button 
-                onClick={() => {
-                  localStorage.setItem('workOrderData', JSON.stringify(data));
-                  console.log('Datos guardados:', data);
-                  alert('Datos guardados exitosamente');
-                }} 
-                variant="outline" 
-                size="sm"
-              >
-                <Save className="h-4 w-4 mr-2" />
-                Guardar
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => {
+                    localStorage.setItem('workOrderData', JSON.stringify(data));
+                    console.log('Datos guardados:', data);
+                    alert('Datos guardados exitosamente');
+                  }} 
+                  variant="outline" 
+                  size="sm"
+                >
+                  <Save className="h-4 w-4 mr-2" />
+                  Guardar
+                </Button>
+                <Link to="/">
+                  <Button variant="outline" size="sm">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Menú Principal
+                  </Button>
+                </Link>
+              </div>
             </div>
           </CardHeader>
           <CardContent className="p-8">
