@@ -10,6 +10,7 @@ import { VoiceInput } from '@/components/ui/voice-input';
 import { PhotoInput } from '@/components/ui/photo-input';
 import { ChevronLeft, ChevronRight, Save, FileText, Home, Download, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { generateFieldInspectionPDF } from '@/lib/pdf-generator';
 
 interface FieldInspectionData {
   // Basic Info
@@ -703,6 +704,15 @@ export const FieldInspectionForm: React.FC = () => {
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Guardar
+                </Button>
+                
+                <Button 
+                  onClick={() => generateFieldInspectionPDF(data)}
+                  variant="outline" 
+                  size="sm"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Generar PDF
                 </Button>
                 <Link to="/">
                   <Button variant="outline" size="sm">

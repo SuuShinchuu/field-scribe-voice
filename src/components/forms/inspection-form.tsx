@@ -10,6 +10,7 @@ import { VoiceInput } from '@/components/ui/voice-input';
 import { PhotoInput } from '@/components/ui/photo-input';
 import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { generateFinalInspectionPDF } from '@/lib/pdf-generator';
 
 interface InspectionData {
   // Basic Info
@@ -1059,6 +1060,15 @@ export const InspectionForm: React.FC = () => {
                 >
                   <Save className="h-4 w-4 mr-2" />
                   Guardar
+                </Button>
+                
+                <Button 
+                  onClick={() => generateFinalInspectionPDF(data)}
+                  variant="outline" 
+                  size="sm"
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Generar PDF
                 </Button>
                 <Link to="/">
                   <Button variant="outline" size="sm">
