@@ -103,27 +103,36 @@ export interface FinalInspectionPDFData {
 
 const addFormField = (doc: jsPDF, x: number, y: number, label: string, value: string, width: number = 80): number => {
   const fontSize = 9;
-  const lineHeight = 6;
+  const lineHeight = 7;
+  const labelSpacing = 2;
   
   doc.setFontSize(fontSize);
   doc.setFont('helvetica', 'bold');
   doc.text(label + ':', x, y);
   
+  // Calculate proper spacing for the value based on label length
+  const labelWidth = doc.getTextWidth(label + ': ');
+  const valueX = x + labelWidth + labelSpacing;
+  
   doc.setFont('helvetica', 'normal');
-  const valueText = value || '________________________________';
-  const lines = doc.splitTextToSize(valueText, width);
+  const valueText = value || '_'.repeat(30);
   
-  let currentY = y;
-  lines.forEach((line: string, index: number) => {
-    if (index === 0) {
-      doc.text(line, x + label.length * 0.6 + 2, currentY);
-    } else {
+  // If value is too long for same line, put it on next line
+  if (valueX + doc.getTextWidth(valueText) > x + width) {
+    const nextY = y + lineHeight;
+    const lines = doc.splitTextToSize(valueText, width - 10);
+    
+    let currentY = nextY;
+    lines.forEach((line: string) => {
+      doc.text(line, x + 10, currentY);
       currentY += lineHeight;
-      doc.text(line, x, currentY);
-    }
-  });
-  
-  return currentY + lineHeight + 2;
+    });
+    
+    return currentY + 3;
+  } else {
+    doc.text(valueText, valueX, y);
+    return y + lineHeight + 3;
+  }
 };
 
 const addSection = (doc: jsPDF, x: number, y: number, title: string): number => {
