@@ -171,38 +171,46 @@ const addCheckboxField = (doc: jsPDF, x: number, y: number, label: string, check
 
 export const generateWorkOrderPDF = (data: WorkOrderPDFData) => {
   const doc = new jsPDF();
-  let currentY = 25;
+  let currentY = 20;
   
   // Header with border
-  doc.setFontSize(18);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('ORDEN DE TRABAJO', 105, currentY, { align: 'center' });
-  doc.rect(15, 15, 180, 15);
-  currentY += 25;
+  doc.text('ORDEN DE TRABAJO', 105, currentY + 8, { align: 'center' });
+  doc.rect(15, currentY, 180, 12);
+  currentY += 18;
   
   // Inspector Info Section
   currentY = addSection(doc, 20, currentY, 'INFORMACIÓN DEL INSPECTOR');
   currentY = addTwoColumnFields(doc, 20, currentY, 'Inspector', data.inspector, 'Código Inspector', data.codigoInspector);
   currentY = addTwoColumnFields(doc, 20, currentY, 'Móvil Inspector', data.movilInspector, 'Coordinador', data.coordinador);
-  currentY = addFormField(doc, 20, currentY, 'Móvil Coordinador', data.movilCoordinador, 70);
-  currentY += 10;
+  currentY = addFormField(doc, 20, currentY, 'Móvil Coordinador', data.movilCoordinador, 85);
+  currentY += 5;
   
   // Expedition Info Section
   currentY = addSection(doc, 20, currentY, 'INFORMACIÓN DEL EXPEDIENTE');
   currentY = addTwoColumnFields(doc, 20, currentY, 'Expediente NOVA', data.expedienteNova, 'País Destino', data.paisDestino);
   currentY = addTwoColumnFields(doc, 20, currentY, 'Fecha Inspección', data.fechaInspeccion, 'Hora Inspección', data.horaInspeccion);
-  currentY = addFormField(doc, 20, currentY, 'Persona Contacto', data.personaContacto, 140);
-  currentY += 10;
+  currentY = addFormField(doc, 20, currentY, 'Persona Contacto', data.personaContacto, 175);
+  currentY += 5;
   
   // Client Info Section
   currentY = addSection(doc, 20, currentY, 'INFORMACIÓN DEL CLIENTE');
-  currentY = addFormField(doc, 20, currentY, 'Expediente Cliente', data.expedienteCliente, 140);
+  currentY = addFormField(doc, 20, currentY, 'Expediente Cliente', data.expedienteCliente, 175);
+  
+  // Check if we need new page before adding exportador/importador (prevent cutting)
+  if (currentY > 190) {
+    doc.addPage();
+    currentY = 20;
+    currentY = addSection(doc, 20, currentY, 'INFORMACIÓN DEL CLIENTE (continuación)');
+  }
+  
   currentY = addTwoColumnFields(doc, 20, currentY, 'Exportador', data.exportador, 'Importador', data.importador);
   currentY = addTwoColumnFields(doc, 20, currentY, 'Número Contrato', data.numeroContrato, 'Suplemento Contrato', data.suplementoContrato);
-  currentY += 10;
+  currentY += 5;
   
-  // Check if new page needed
-  if (currentY > 240) {
+  // Check if new page needed for location
+  if (currentY > 200) {
     doc.addPage();
     currentY = 20;
   }
