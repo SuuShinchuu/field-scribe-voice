@@ -66,7 +66,7 @@ const ReportTypeSelection: React.FC = () => {
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-muted-foreground mb-6 text-sm">
-                  Informe completo y detallado con todos los hallazgos y conclusiones
+                  Informe completo y detallado con todos los hallazgos,conclusiones y fotos
                 </p>
                 <Button className="w-full">
                   Crear Informe Final
