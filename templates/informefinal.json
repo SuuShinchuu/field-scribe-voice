@@ -1,0 +1,135 @@
+{
+    "expediente_nova": "NC-CU-08223-25_ALDABA",
+    "expediente_cliente": "ALDABA-2025-08223",
+    "fecha_inspeccion": "2025-08-27",
+    "mercancia_declarada": "Harina de fuerza W270",
+    "numero_contrato": "No facilitado",
+    "via_transporte": "Marítima",
+    "tipo_carga": "Contenedor",
+    "numero_contenedores": 1,
+    "tipo_contenedor": "20’ DV",
+    "numeracion_contenedores": "RFCU 227432 5",
+    "precintos_nova": "15357",
+    "precintos_naviera": "ES0033566",
+    "puertos_origen_destino": "Barcelona / Mariel",
+  
+    "vendedor_empresa": "Aldaba Business Consulting",
+    "vendedor_contacto": "Guillermo Jiménez",
+    "vendedor_direccion": "Santísima Trinidad 30, 3º",
+    "vendedor_email": "g.jimenez@aldaba.pro",
+    "vendedor_cp": "28010",
+    "vendedor_telefono_fijo": "+34 91 745 14 12",
+    "vendedor_poblacion": "Madrid, España",
+    "vendedor_telefono_movil": "+34 607 711 607",
+  
+    "comprador_empresa": "Cubazucar",
+    "comprador_contacto": "--",
+    "comprador_direccion": "Calle 23, nº 55",
+    "comprador_email": "contactos@cubazucar.cu",
+    "comprador_cp": "--",
+    "comprador_telefono_fijo": "+53 783 806 06",
+    "comprador_poblacion": "Vedado – La Habana",
+    "comprador_telefono_movil": "--",
+  
+    "lugar_inspeccion": "Binéfar, Huesca",
+  
+    "alcance_inspeccion": {
+      "revision_contenedor": "SI",
+      "conteo_bultos": "SI",
+      "apertura_bultos": "NA",
+      "pesaje_bultos": "NA",
+      "embalaje": "SI",
+      "palets_fumigados": "SI",
+      "marcas": "SI",
+      "descripcion_estiba": "SI",
+      "mercancia_trincada": "SI",
+      "fecha_produccion_chk": "SI",
+      "fecha_caducidad_chk": "SI",
+      "lotes_chk": "SI",
+      "certificados_chk": "SI",
+      "toma_muestras": "SI",
+      "pruebas_laboratorio": "SI",
+      "pesaje_contenedor_chk": "SI",
+      "tique_pesaje_chk": "SI",
+      "temp_almacenaje_chk": "SI",
+      "temp_contenedor_chk": "SI",
+      "precintado_chk": "SI",
+      "precintado_grupaje_chk": "SI",
+      "precinto_barra_chk": "SI",
+      "informe_campo_chk": "SI"
+    },
+  
+    "hallazgos_contenedores": {
+      "limpios": true,
+      "libres_olores": true,
+      "sin_agujeros_filtrado_luz": true,
+      "sin_oxido_relevante": true,
+      "cierre_puertas_correcto": true
+    },
+  
+    "numero_bultos_totales": "9 palets",
+    "apertura_bultos_resultado": "N/A",
+    "pesaje_bultos_resultado": "N/A",
+  
+    "detalle_pesos": "N/A",
+  
+    "embalaje": {
+      "tipo": ["Saco"],
+      "material": ["Plástico"],
+      "presentado": ["Paletizado", "Retractilado", "Flejado"]
+    },
+  
+    "marcas_resultado": "Ver fotos",
+    "senales_internacionales": "NO",
+  
+    "fecha_produccion_valor": "2025-07-30",
+    "fecha_caducidad_valor": "2026-07-30",
+    "lotes_valor": "Lote A-112, A-113",
+    "certificados_calidad": "N/A",
+  
+    "toma_muestras_resultado": "N/A",
+    "pruebas_laboratorio_resultado": "N/A",
+  
+    "pesaje_contenedor_resultado": "N/A",
+    "tique_pesaje_resultado": "N/A",
+    "temp_contenedor_valor": "N/A",
+  
+    "precintado_resultado": "SI. Ver fotos.",
+    "precinto_barra_resultado": "N/A",
+  
+    "descripcion_estiba_texto": "Fila izquierda: 5 palets. Fila derecha: 4 palets.",
+    "otros_hallazgos": "Sin incidencias. Peso Neto: 11.250 Kg. Peso Bruto: 11.430 Kg.",
+    "peso_neto": "11250",
+    "peso_bruto": "11430",
+  
+    "conclusiones": "La mercancía se encuentra en óptimas condiciones para su exportación.",
+  
+    "lugar_firma": "Sant Cugat del Vallès",
+    "fecha_firma": "2025-08-29",
+  
+    "fotos": {
+      "mercancia": [
+        { "path": "imagenes/mercancia_1.jpg", "titulo": "Mercancía - Vista general" },
+        { "path": "imagenes/mercancia_2.jpg", "titulo": "Mercancía - Detalle palet" },
+        { "path": "imagenes/mercancia_3.jpg", "titulo": "Mercancía - Estiba" },
+        { "path": "imagenes/mercancia_4.jpg", "titulo": "Mercancía - Retractilado" }
+      ],
+      "marcas": [
+        { "path": "imagenes/marcas_1.jpg", "titulo": "Marcas - Saco" },
+        { "path": "imagenes/marcas_2.jpg", "titulo": "Marcas - Palet" }
+      ],
+      "carga_contenedor": [
+        { "path": "imagenes/carga_1.jpg", "titulo": "Control carga - RFCU 227432 5" },
+        { "path": "imagenes/carga_2.jpg", "titulo": "Puertas y precinto" }
+      ],
+      "generales": [
+        { "path": "imagenes/general_1.jpg", "titulo": "Vista general 1" },
+        { "path": "imagenes/general_2.jpg", "titulo": "Vista general 2" }
+      ]
+    },
+  
+    "foto_mercancia": "imagenes/mercancia_destacada.jpg",
+    "foto_marcas": "imagenes/marcas_destacada.jpg",
+    "foto_contenedor": "imagenes/contenedor_destacado.jpg",
+    "foto_control_carga": "imagenes/control_carga_destacado.jpg"
+  }
