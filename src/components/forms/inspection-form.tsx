@@ -8,7 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { VoiceInput } from '@/components/ui/voice-input';
 import { PhotoInput } from '@/components/ui/photo-input';
-import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download, FileJson } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateFinalInspectionPDF } from '@/lib/pdf-generator';
 
@@ -293,6 +293,185 @@ export const InspectionForm: React.FC = () => {
       }));
       setShowImportOptions(false);
     }
+  };
+
+  const exportToJSON = () => {
+    // Map embalaje types to array
+    const embalajeTypes: string[] = [];
+    if (data.embalajeTipo.huacal) embalajeTypes.push('Huacal');
+    if (data.embalajeTipo.bidon) embalajeTypes.push('Bidón');
+    if (data.embalajeTipo.caja) embalajeTypes.push('Caja');
+    if (data.embalajeTipo.bandeja) embalajeTypes.push('Bandeja');
+    if (data.embalajeTipo.atado) embalajeTypes.push('Atado');
+    if (data.embalajeTipo.saco) embalajeTypes.push('Saco');
+    if (data.embalajeTipo.rollo) embalajeTypes.push('Rollo');
+    if (data.embalajeTipo.otros) embalajeTypes.push('Otros');
+
+    // Map embalaje materials to array
+    const embalajeMaterials: string[] = [];
+    if (data.embalajeMaterial.carton) embalajeMaterials.push('Cartón');
+    if (data.embalajeMaterial.madera) embalajeMaterials.push('Madera');
+    if (data.embalajeMaterial.plastico) embalajeMaterials.push('Plástico');
+    if (data.embalajeMaterial.metalico) embalajeMaterials.push('Metálico');
+    if (data.embalajeMaterial.papel) embalajeMaterials.push('Papel');
+    if (data.embalajeMaterial.kraft) embalajeMaterials.push('Kraft');
+    if (data.embalajeMaterial.otro) embalajeMaterials.push('Otro');
+
+    // Map embalaje presentation to array
+    const embalajePresentation: string[] = [];
+    if (data.embalajePresentation.paletizado) embalajePresentation.push('Paletizado');
+    if (data.embalajePresentation.retractilado) embalajePresentation.push('Retractilado');
+    if (data.embalajePresentation.flejado) embalajePresentation.push('Flejado');
+    if (data.embalajePresentation.granel) embalajePresentation.push('Granel');
+
+    // Get via transporte
+    const viaTransporte = data.viaTransporte.aerea ? 'Aérea' : data.viaTransporte.maritima ? 'Marítima' : '';
+    
+    // Get tipo carga
+    const tipoCarga = data.tipoCarga.contenedor ? 'Contenedor' : data.tipoCarga.cargaAgrupada ? 'Carga Agrupada' : '';
+
+    // Map photos
+    const fotosMercancia = data.bultosFotos.map((path, index) => ({ 
+      path, 
+      titulo: `Foto Mercancía ${index + 1}` 
+    }));
+    const fotosMarcas = data.marcasFotos.map((path, index) => ({ 
+      path, 
+      titulo: `Foto Marcas ${index + 1}` 
+    }));
+    const fotosPrecintado = data.precintadoFotos.map((path, index) => ({ 
+      path, 
+      titulo: `Foto Precintado ${index + 1}` 
+    }));
+
+    const jsonData = {
+      expediente_nova: data.expedienteNova,
+      expediente_cliente: data.expedienteCliente,
+      fecha_inspeccion: data.fechaInspeccion,
+      mercancia_declarada: data.mercancia,
+      numero_contrato: data.numeroContrato,
+      via_transporte: viaTransporte,
+      tipo_carga: tipoCarga,
+      numero_contenedores: data.numeroContenedores,
+      tipo_contenedor: data.tipoContenedor,
+      numeracion_contenedores: data.numeracionContenedores,
+      precintos_nova: data.precintosNova,
+      precintos_naviera: data.precintosNaviera,
+      puertos_origen_destino: data.puertos,
+
+      vendedor_empresa: data.vendedorEmpresa,
+      vendedor_contacto: data.vendedorContacto,
+      vendedor_direccion: data.vendedorDireccion,
+      vendedor_email: data.vendedorEmail,
+      vendedor_cp: data.vendedorCodPostal,
+      vendedor_telefono_fijo: data.vendedorTelefono,
+      vendedor_poblacion: data.vendedorPoblacion,
+      vendedor_telefono_movil: data.vendedorMovil,
+
+      comprador_empresa: data.compradorEmpresa,
+      comprador_contacto: data.compradorContacto,
+      comprador_direccion: data.compradorDireccion,
+      comprador_email: data.compradorEmail,
+      comprador_cp: data.compradorCodPostal,
+      comprador_telefono_fijo: data.compradorTelefono,
+      comprador_poblacion: data.compradorPoblacion,
+      comprador_telefono_movil: data.compradorMovil,
+
+      lugar_inspeccion: data.lugarInspeccion,
+
+      alcance_inspeccion: {
+        revision_contenedor: data.alcance.revisionContenedor,
+        conteo_bultos: data.alcance.conteoBultos,
+        apertura_bultos: data.alcance.aperturaBultos,
+        pesaje_bultos: data.alcance.pesajeBultos,
+        embalaje: data.alcance.embalaje,
+        palets_fumigados: data.alcance.paletsFumigados,
+        marcas: data.alcance.marcas,
+        descripcion_estiba: data.alcance.descripcionEstiba,
+        mercancia_trincada: data.alcance.mercanciaTrincada,
+        fecha_produccion_chk: data.alcance.fechaProduccion,
+        fecha_caducidad_chk: data.alcance.fechaCaducidad,
+        lotes_chk: data.alcance.lotes,
+        certificados_chk: data.alcance.certificadosCalidad,
+        toma_muestras: data.alcance.tomaMuestras,
+        pruebas_laboratorio: data.alcance.pruebasLaboratorio,
+        pesaje_contenedor_chk: data.alcance.pesajeContenedor,
+        tique_pesaje_chk: data.alcance.tiqueOficial,
+        temp_almacenaje_chk: data.alcance.temperaturaAlmacenaje,
+        temp_contenedor_chk: data.alcance.temperaturaContenedor,
+        precintado_chk: data.alcance.precintadoContenedor,
+        precintado_grupaje_chk: data.alcance.precintadoGrupaje,
+        precinto_barra_chk: data.alcance.precintoSeguridad,
+        informe_campo_chk: data.alcance.informeCampo
+      },
+
+      hallazgos_contenedores: {
+        limpios: data.revisionContenedores.limpios ? 'Sí' : 'No',
+        libres_olores: data.revisionContenedores.libresOlores ? 'Sí' : 'No',
+        sin_agujeros_filtrado_luz: data.revisionContenedores.sinAgujeros ? 'Sí' : 'No',
+        sin_oxido_relevante: data.revisionContenedores.sinOxido ? 'Sí' : 'No',
+        cierre_puertas_correcto: data.revisionContenedores.cierrePuertas ? 'Sí' : 'No'
+      },
+
+      numero_bultos_totales: data.numeroBultos,
+      apertura_bultos_resultado: data.aperturaBultos,
+      pesaje_bultos_resultado: data.pesajeBultos,
+      detalle_pesos: data.detallePesos,
+
+      embalaje: {
+        tipo: embalajeTypes,
+        material: embalajeMaterials,
+        presentado: embalajePresentation
+      },
+
+      marcas_resultado: data.marcasDetalle,
+      senales_internacionales: data.senalesInternacionales ? 'Sí' : 'No',
+      fecha_produccion_valor: data.fechaProduccionDetalle,
+      fecha_caducidad_valor: data.fechaCaducidadDetalle,
+      lotes_valor: data.lotesDetalle,
+      certificados_calidad: data.certificadosDetalle,
+      toma_muestras_resultado: data.tomaMuestrasDetalle,
+      pruebas_laboratorio_resultado: data.pruebasLaboratorioDetalle,
+      pesaje_contenedor_resultado: data.pesajeContenedorDetalle,
+      tique_pesaje_resultado: data.tiqueOficialDetalle,
+      temp_contenedor_valor: data.temperaturaContenedorDetalle,
+      precintado_resultado: data.precintadoContenedorDetalle,
+      precinto_barra_resultado: data.precintoSeguridadDetalle,
+
+      descripcion_estiba_texto: data.descripcionEstibaTexto,
+      otros_hallazgos: data.otrosHallazgos,
+      peso_neto: '',
+      peso_bruto: '',
+
+      conclusiones: data.conclusiones,
+
+      lugar_firma: data.lugarFecha,
+      fecha_firma: data.fechaInspeccion,
+
+      fotos: {
+        mercancia: fotosMercancia,
+        marcas: fotosMarcas,
+        carga_contenedor: fotosPrecintado,
+        generales: []
+      },
+
+      foto_mercancia: data.bultosFotos[0] || '',
+      foto_marcas: data.marcasFotos[0] || '',
+      foto_contenedor: data.precintadoFotos[0] || '',
+      foto_control_carga: ''
+    };
+
+    // Create and download JSON file
+    const jsonString = JSON.stringify(jsonData, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Informe_Final_${data.expedienteNova || 'NOVA'}_${data.fechaInspeccion}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const updateNestedField = (parent: keyof InspectionData, field: string, value: any) => {
@@ -1137,44 +1316,57 @@ export const InspectionForm: React.FC = () => {
           </CardContent>
         </Card>
 
-        <div className="flex justify-between mt-6 gap-4">
-          {currentStep === 0 ? (
-            <Link to="/" className="flex-1">
-              <Button variant="outline" className="w-full">
-                <Home className="h-4 w-4 mr-2" />
-                Volver al Inicio
+        <div className="flex flex-col gap-4 mt-6">
+          <div className="flex justify-between gap-4">
+            {currentStep === 0 ? (
+              <Link to="/" className="flex-1">
+                <Button variant="outline" className="w-full">
+                  <Home className="h-4 w-4 mr-2" />
+                  Volver al Inicio
+                </Button>
+              </Link>
+            ) : (
+              <Button
+                onClick={prevStep}
+                variant="outline"
+                className="flex-1"
+              >
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Anterior
               </Button>
-            </Link>
-          ) : (
+            )}
             <Button
-              onClick={prevStep}
-              variant="outline"
+              onClick={currentStep === steps.length - 1 ? () => {
+                localStorage.setItem('inspectionData', JSON.stringify(data));
+                console.log('Informe final guardado:', data);
+                alert('Informe final guardado exitosamente');
+              } : nextStep}
               className="flex-1"
             >
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Anterior
+              {currentStep === steps.length - 1 ? (
+                <>
+                  <Save className="h-4 w-4 mr-2" />
+                  Guardar Informe
+                </>
+              ) : (
+                <>
+                  Siguiente
+                  <ChevronRight className="h-4 w-4 ml-2" />
+                </>
+              )}
+            </Button>
+          </div>
+          
+          {currentStep === steps.length - 1 && (
+            <Button
+              onClick={exportToJSON}
+              variant="outline"
+              className="w-full"
+            >
+              <FileJson className="h-4 w-4 mr-2" />
+              Exportar a JSON
             </Button>
           )}
-          <Button
-            onClick={currentStep === steps.length - 1 ? () => {
-              localStorage.setItem('inspectionData', JSON.stringify(data));
-              console.log('Informe final guardado:', data);
-              alert('Informe final guardado exitosamente');
-            } : nextStep}
-            className="flex-1"
-          >
-            {currentStep === steps.length - 1 ? (
-              <>
-                <Save className="h-4 w-4 mr-2" />
-                Guardar Informe
-              </>
-            ) : (
-              <>
-                Siguiente
-                <ChevronRight className="h-4 w-4 ml-2" />
-              </>
-            )}
-          </Button>
         </div>
       </div>
     </div>
