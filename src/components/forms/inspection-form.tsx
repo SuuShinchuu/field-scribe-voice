@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,9 +8,11 @@ import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { VoiceInput } from '@/components/ui/voice-input';
 import { PhotoInput } from '@/components/ui/photo-input';
-import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download, FileJson } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download, FileJson, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateFinalInspectionPDF } from '@/lib/pdf-generator';
+import { generateWordDocument } from '@/lib/doc-generator';
+import { toast } from '@/hooks/use-toast';
 
 interface InspectionData {
   // Basic Info
@@ -267,6 +269,7 @@ export const InspectionForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [showImportOptions, setShowImportOptions] = useState(false);
   const [data, setData] = useState<InspectionData>(initialData);
+  const jsonInputRef = useRef<HTMLInputElement>(null);
 
   const updateField = (field: string, value: any) => {
     setData(prev => ({ ...prev, [field]: value }));
@@ -295,7 +298,7 @@ export const InspectionForm: React.FC = () => {
     }
   };
 
-  const exportToJSON = () => {
+  const buildJSONData = () => {
     // Map embalaje types to array
     const embalajeTypes: string[] = [];
     if (data.embalajeTipo.huacal) embalajeTypes.push('Huacal');
@@ -344,7 +347,7 @@ export const InspectionForm: React.FC = () => {
       titulo: `Foto Precintado ${index + 1}` 
     }));
 
-    const jsonData = {
+    return {
       expediente_nova: data.expedienteNova,
       expediente_cliente: data.expedienteCliente,
       fecha_inspeccion: data.fechaInspeccion,
@@ -460,7 +463,11 @@ export const InspectionForm: React.FC = () => {
       foto_contenedor: data.precintadoFotos[0] || '',
       foto_control_carga: ''
     };
+  };
 
+  const exportToJSON = () => {
+    const jsonData = buildJSONData();
+    
     // Create and download JSON file
     const jsonString = JSON.stringify(jsonData, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
@@ -472,6 +479,203 @@ export const InspectionForm: React.FC = () => {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+  };
+
+  const handleJSONUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const jsonData = JSON.parse(e.target?.result as string);
+        
+        // Map JSON data back to form state
+        setData({
+          expedienteNova: jsonData.expediente_nova || '',
+          expedienteCliente: jsonData.expediente_cliente || '',
+          fechaInspeccion: jsonData.fecha_inspeccion || new Date().toISOString().split('T')[0],
+          mercancia: jsonData.mercancia_declarada || '',
+          numeroContrato: jsonData.numero_contrato || '',
+          viaTransporte: {
+            aerea: jsonData.via_transporte === 'Aérea',
+            maritima: jsonData.via_transporte === 'Marítima'
+          },
+          tipoCarga: {
+            contenedor: jsonData.tipo_carga === 'Contenedor',
+            cargaAgrupada: jsonData.tipo_carga === 'Carga Agrupada'
+          },
+          numeroContenedores: jsonData.numero_contenedores || '',
+          tipoContenedor: jsonData.tipo_contenedor || '',
+          numeracionContenedores: jsonData.numeracion_contenedores || '',
+          precintosNova: jsonData.precintos_nova || '',
+          precintosNaviera: jsonData.precintos_naviera || '',
+          puertos: jsonData.puertos_origen_destino || '',
+          
+          vendedorEmpresa: jsonData.vendedor_empresa || '',
+          vendedorContacto: jsonData.vendedor_contacto || '',
+          vendedorDireccion: jsonData.vendedor_direccion || '',
+          vendedorEmail: jsonData.vendedor_email || '',
+          vendedorCodPostal: jsonData.vendedor_cp || '',
+          vendedorTelefono: jsonData.vendedor_telefono_fijo || '',
+          vendedorPoblacion: jsonData.vendedor_poblacion || '',
+          vendedorMovil: jsonData.vendedor_telefono_movil || '',
+          
+          compradorEmpresa: jsonData.comprador_empresa || '',
+          compradorContacto: jsonData.comprador_contacto || '',
+          compradorDireccion: jsonData.comprador_direccion || '',
+          compradorEmail: jsonData.comprador_email || '',
+          compradorCodPostal: jsonData.comprador_cp || '',
+          compradorTelefono: jsonData.comprador_telefono_fijo || '',
+          compradorPoblacion: jsonData.comprador_poblacion || '',
+          compradorMovil: jsonData.comprador_telefono_movil || '',
+          
+          lugarInspeccion: jsonData.lugar_inspeccion || '',
+          
+          alcance: {
+            revisionContenedor: jsonData.alcance_inspeccion?.revision_contenedor || '',
+            conteoBultos: jsonData.alcance_inspeccion?.conteo_bultos || '',
+            aperturaBultos: jsonData.alcance_inspeccion?.apertura_bultos || '',
+            pesajeBultos: jsonData.alcance_inspeccion?.pesaje_bultos || '',
+            embalaje: jsonData.alcance_inspeccion?.embalaje || '',
+            paletsFumigados: jsonData.alcance_inspeccion?.palets_fumigados || '',
+            marcas: jsonData.alcance_inspeccion?.marcas || '',
+            descripcionEstiba: jsonData.alcance_inspeccion?.descripcion_estiba || '',
+            mercanciaTrincada: jsonData.alcance_inspeccion?.mercancia_trincada || '',
+            fechaProduccion: jsonData.alcance_inspeccion?.fecha_produccion_chk || '',
+            fechaCaducidad: jsonData.alcance_inspeccion?.fecha_caducidad_chk || '',
+            lotes: jsonData.alcance_inspeccion?.lotes_chk || '',
+            certificadosCalidad: jsonData.alcance_inspeccion?.certificados_chk || '',
+            tomaMuestras: jsonData.alcance_inspeccion?.toma_muestras || '',
+            pruebasLaboratorio: jsonData.alcance_inspeccion?.pruebas_laboratorio || '',
+            pesajeContenedor: jsonData.alcance_inspeccion?.pesaje_contenedor_chk || '',
+            tiqueOficial: jsonData.alcance_inspeccion?.tique_pesaje_chk || '',
+            temperaturaAlmacenaje: jsonData.alcance_inspeccion?.temp_almacenaje_chk || '',
+            temperaturaContenedor: jsonData.alcance_inspeccion?.temp_contenedor_chk || '',
+            precintadoContenedor: jsonData.alcance_inspeccion?.precintado_chk || '',
+            precintadoGrupaje: jsonData.alcance_inspeccion?.precintado_grupaje_chk || '',
+            precintoSeguridad: jsonData.alcance_inspeccion?.precinto_barra_chk || '',
+            informeCampo: jsonData.alcance_inspeccion?.informe_campo_chk || '',
+          },
+          
+          revisionContenedores: {
+            limpios: jsonData.hallazgos_contenedores?.limpios === 'Sí',
+            libresOlores: jsonData.hallazgos_contenedores?.libres_olores === 'Sí',
+            sinAgujeros: jsonData.hallazgos_contenedores?.sin_agujeros_filtrado_luz === 'Sí',
+            sinOxido: jsonData.hallazgos_contenedores?.sin_oxido_relevante === 'Sí',
+            cierrePuertas: jsonData.hallazgos_contenedores?.cierre_puertas_correcto === 'Sí',
+          },
+          
+          numeroBultos: jsonData.numero_bultos_totales || '',
+          bultosFotos: jsonData.fotos?.mercancia?.map((f: any) => f.path) || [],
+          aperturaBultos: jsonData.apertura_bultos_resultado || '',
+          pesajeBultos: jsonData.pesaje_bultos_resultado || '',
+          detallePesos: jsonData.detalle_pesos || '',
+          
+          embalajeTipo: {
+            huacal: jsonData.embalaje?.tipo?.includes('Huacal') || false,
+            bidon: jsonData.embalaje?.tipo?.includes('Bidón') || false,
+            caja: jsonData.embalaje?.tipo?.includes('Caja') || false,
+            bandeja: jsonData.embalaje?.tipo?.includes('Bandeja') || false,
+            atado: jsonData.embalaje?.tipo?.includes('Atado') || false,
+            saco: jsonData.embalaje?.tipo?.includes('Saco') || false,
+            rollo: jsonData.embalaje?.tipo?.includes('Rollo') || false,
+            otros: jsonData.embalaje?.tipo?.includes('Otros') || false,
+          },
+          
+          embalajeMaterial: {
+            carton: jsonData.embalaje?.material?.includes('Cartón') || false,
+            madera: jsonData.embalaje?.material?.includes('Madera') || false,
+            plastico: jsonData.embalaje?.material?.includes('Plástico') || false,
+            metalico: jsonData.embalaje?.material?.includes('Metálico') || false,
+            papel: jsonData.embalaje?.material?.includes('Papel') || false,
+            kraft: jsonData.embalaje?.material?.includes('Kraft') || false,
+            otro: jsonData.embalaje?.material?.includes('Otro') || false,
+          },
+          
+          embalajePresentation: {
+            paletizado: jsonData.embalaje?.presentado?.includes('Paletizado') || false,
+            retractilado: jsonData.embalaje?.presentado?.includes('Retractilado') || false,
+            flejado: jsonData.embalaje?.presentado?.includes('Flejado') || false,
+            granel: jsonData.embalaje?.presentado?.includes('Granel') || false,
+          },
+          
+          marcasDetalle: jsonData.marcas_resultado || '',
+          marcasFotos: jsonData.fotos?.marcas?.map((f: any) => f.path) || [],
+          senalesInternacionales: jsonData.senales_internacionales === 'Sí',
+          fechaProduccionDetalle: jsonData.fecha_produccion_valor || '',
+          fechaCaducidadDetalle: jsonData.fecha_caducidad_valor || '',
+          lotesDetalle: jsonData.lotes_valor || '',
+          certificadosDetalle: jsonData.certificados_calidad || '',
+          tomaMuestrasDetalle: jsonData.toma_muestras_resultado || '',
+          pruebasLaboratorioDetalle: jsonData.pruebas_laboratorio_resultado || '',
+          pesajeContenedorDetalle: jsonData.pesaje_contenedor_resultado || '',
+          tiqueOficialDetalle: jsonData.tique_pesaje_resultado || '',
+          temperaturaContenedorDetalle: jsonData.temp_contenedor_valor || '',
+          precintadoContenedorDetalle: jsonData.precintado_resultado || '',
+          precintadoFotos: jsonData.fotos?.carga_contenedor?.map((f: any) => f.path) || [],
+          precintoSeguridadDetalle: jsonData.precinto_barra_resultado || '',
+          
+          descripcionEstibaTexto: jsonData.descripcion_estiba_texto || '',
+          otrosHallazgos: jsonData.otros_hallazgos || '',
+          conclusiones: jsonData.conclusiones || '',
+          anexos: '',
+          lugarFecha: jsonData.lugar_firma || '',
+        });
+        
+        toast({
+          title: "JSON importado",
+          description: "Los datos se han cargado correctamente en el formulario",
+        });
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+        toast({
+          title: "Error",
+          description: "El archivo JSON no tiene el formato correcto",
+          variant: "destructive",
+        });
+      }
+    };
+    
+    reader.readAsText(file);
+    // Reset input
+    if (jsonInputRef.current) {
+      jsonInputRef.current.value = '';
+    }
+  };
+
+  const generateWordDoc = async () => {
+    try {
+      toast({
+        title: "Generando documento",
+        description: "Por favor espera mientras se genera el documento Word...",
+      });
+
+      const jsonData = buildJSONData();
+      const blob = await generateWordDocument(jsonData);
+      
+      // Download the file
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Informe_Inspeccion_${data.expedienteNova || 'NOVA'}_${data.fechaInspeccion}.docx`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Documento generado",
+        description: "El documento Word se ha descargado correctamente",
+      });
+    } catch (error) {
+      console.error('Error generating Word document:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo generar el documento Word",
+        variant: "destructive",
+      });
+    }
   };
 
   const updateNestedField = (parent: keyof InspectionData, field: string, value: any) => {
@@ -1358,14 +1562,39 @@ export const InspectionForm: React.FC = () => {
           </div>
           
           {currentStep === steps.length - 1 && (
-            <Button
-              onClick={exportToJSON}
-              variant="outline"
-              className="w-full"
-            >
-              <FileJson className="h-4 w-4 mr-2" />
-              Exportar a JSON
-            </Button>
+            <>
+              <input
+                ref={jsonInputRef}
+                type="file"
+                accept=".json"
+                onChange={handleJSONUpload}
+                className="hidden"
+              />
+              <Button
+                onClick={() => jsonInputRef.current?.click()}
+                variant="outline"
+                className="w-full"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Cargar desde JSON
+              </Button>
+              <Button
+                onClick={exportToJSON}
+                variant="outline"
+                className="w-full"
+              >
+                <FileJson className="h-4 w-4 mr-2" />
+                Exportar a JSON
+              </Button>
+              <Button
+                onClick={generateWordDoc}
+                variant="outline"
+                className="w-full"
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Generar Documento Word
+              </Button>
+            </>
           )}
         </div>
       </div>
