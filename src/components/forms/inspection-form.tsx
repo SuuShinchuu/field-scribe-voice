@@ -1608,14 +1608,6 @@ const normYes = (v: any): boolean => {
                   Guardar
                 </Button>
                 
-                <Button 
-                  onClick={() => generateFinalInspectionPDF(data)}
-                  variant="outline" 
-                  size="sm"
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Generar PDF
-                </Button>
                 <Link to="/">
                   <Button variant="outline" size="sm">
                     <ArrowLeft className="h-4 w-4 mr-2" />
