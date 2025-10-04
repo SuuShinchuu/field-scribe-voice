@@ -1737,25 +1737,25 @@ const normYes = (v: any): boolean => {
     className="hidden"
   />
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+  <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
     <Button type="button" onClick={() => jsonInputRef.current?.click()} variant="outline" className="w-full">
       <Upload className="h-4 w-4 mr-2" />
-      Cargar desde JSON
+      JSON
     </Button>
 
     <Button type="button" onClick={exportToJSON} variant="outline" className="w-full">
-      <FileJson className="h-4 w-4 mr-2" />
-      Exportar a JSON
+      <Download className="h-4 w-4 mr-2" />
+      JSON
     </Button>
 
     <Button type="button" onClick={generateWordDoc} variant="outline" className="w-full">
       <FileText className="h-4 w-4 mr-2" />
-      Generar Documento Word
+      Word
     </Button>
 
     <Button type="button" onClick={generatePDF} variant="outline" className="w-full">
       <Download className="h-4 w-4 mr-2" />
-      Generar PDF
+      PDF
     </Button>
   </div>
 </div>
