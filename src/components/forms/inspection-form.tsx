@@ -11,7 +11,7 @@ import { PhotoInput } from '@/components/ui/photo-input';
 import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download, FileJson, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateFinalInspectionPDF } from '@/lib/pdf-generator';
-import { generateWordDocument } from '@/lib/doc-generator';
+import { generateWordDocument, generatePDFFromWord } from '@/lib/doc-generator';
 import { toast } from '@/hooks/use-toast';
 
 
@@ -766,6 +766,78 @@ const normYes = (v: any): boolean => {
       });
   
       console.groupEnd?.();
+    }
+  };
+
+  const generatePDF = async () => {
+    let loadingToastId: string | number | undefined;
+    
+    try {
+      console.group('[UI] Generar PDF desde Word');
+      console.time('[UI] Tiempo total PDF');
+      
+      const loading = toast({
+        title: 'Generando PDF',
+        description: 'Por favor espera mientras se genera el documento PDF desde Word...',
+        duration: 15000,
+      });
+      loadingToastId = (loading as any)?.id;
+      
+      const jsonData = buildJSONData();
+      
+      console.log('[UI] Generando PDF...');
+      const pdfBlob = await generatePDFFromWord(jsonData);
+      
+      if (!pdfBlob || !(pdfBlob instanceof Blob) || pdfBlob.size === 0) {
+        throw new Error('PDF vacío o inválido');
+      }
+      
+      // Download PDF
+      const url = URL.createObjectURL(pdfBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Informe_Inspeccion_${data.expedienteNova || 'NOVA'}_${data.fechaInspeccion}.pdf`;
+      link.rel = 'noopener';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      
+      try {
+        link.click();
+        console.log('[UI] PDF descargado ✅');
+      } catch (e) {
+        console.warn('[UI] Error en descarga, intentando window.open', e);
+        window.open(url, '_blank');
+      } finally {
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+        }, 1500);
+      }
+      
+      if (loadingToastId !== undefined && (toast as any)?.dismiss) {
+        (toast as any).dismiss(loadingToastId);
+      }
+      
+      toast({
+        title: 'PDF generado',
+        description: 'El documento PDF se ha descargado correctamente',
+      });
+      
+      console.timeEnd('[UI] Tiempo total PDF');
+      console.groupEnd();
+    } catch (error) {
+      console.error('[UI] Error generando PDF:', error);
+      console.groupEnd();
+      
+      if (loadingToastId !== undefined && (toast as any)?.dismiss) {
+        (toast as any).dismiss(loadingToastId);
+      }
+      
+      toast({
+        title: 'Error',
+        description: 'Error al generar el documento PDF',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -1665,7 +1737,7 @@ const normYes = (v: any): boolean => {
     className="hidden"
   />
 
-  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
     <Button type="button" onClick={() => jsonInputRef.current?.click()} variant="outline" className="w-full">
       <Upload className="h-4 w-4 mr-2" />
       Cargar desde JSON
@@ -1679,6 +1751,11 @@ const normYes = (v: any): boolean => {
     <Button type="button" onClick={generateWordDoc} variant="outline" className="w-full">
       <FileText className="h-4 w-4 mr-2" />
       Generar Documento Word
+    </Button>
+
+    <Button type="button" onClick={generatePDF} variant="outline" className="w-full">
+      <Download className="h-4 w-4 mr-2" />
+      Generar PDF
     </Button>
   </div>
 </div>
