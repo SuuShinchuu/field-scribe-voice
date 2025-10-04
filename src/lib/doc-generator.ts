@@ -78,12 +78,15 @@ export async function generatePDFFromWord(jsonData: any): Promise<Blob> {
     
     // Create a temporary container for the rendered document
     const container = document.createElement('div');
-    container.style.position = 'absolute';
-    container.style.left = '-9999px';
-    container.style.top = '-9999px';
-    container.style.width = '210mm'; // A4 width
+    container.style.position = 'fixed';
+    container.style.left = '0';
+    container.style.top = '0';
+    container.style.width = '210mm';
+    container.style.minHeight = '297mm';
     container.style.background = 'white';
     container.style.padding = '20mm';
+    container.style.zIndex = '-1';
+    container.style.opacity = '0';
     document.body.appendChild(container);
 
     // Import docx-preview dynamically
@@ -97,26 +100,35 @@ export async function generatePDFFromWord(jsonData: any): Promise<Blob> {
       ignoreHeight: false,
       ignoreFonts: false,
       breakPages: true,
-      ignoreLastRenderedPageBreak: true,
+      ignoreLastRenderedPageBreak: false,
       experimental: true,
       trimXmlDeclaration: true,
+      useBase64URL: true,
+      renderHeaders: true,
+      renderFooters: true,
     });
 
+    console.log('[PDF] HTML renderizado. Container height:', container.scrollHeight);
     console.log('[PDF] 3) Convirtiendo HTML a PDF...');
+    
+    // Wait a bit for all resources to load
+    await new Promise(resolve => setTimeout(resolve, 500));
     
     // Import html2pdf dynamically
     const html2pdf = (await import('html2pdf.js')).default;
     
     // Convert HTML to PDF
     const opt = {
-      margin: 0,
+      margin: [10, 10, 10, 10] as [number, number, number, number],
       filename: 'documento.pdf',
-      image: { type: 'jpeg' as const, quality: 0.98 },
+      image: { type: 'jpeg' as const, quality: 0.95 },
       html2canvas: { 
         scale: 2,
         useCORS: true,
         letterRendering: true,
-        logging: false
+        logging: true,
+        allowTaint: true,
+        backgroundColor: '#ffffff'
       },
       jsPDF: { 
         unit: 'mm', 
@@ -124,7 +136,7 @@ export async function generatePDFFromWord(jsonData: any): Promise<Blob> {
         orientation: 'portrait' as const,
         compress: true
       },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      pagebreak: { mode: ['avoid-all', 'css', 'legacy'], before: '.page-break' }
     };
 
     const pdfBlob = await html2pdf()
