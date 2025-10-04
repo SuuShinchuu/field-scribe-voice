@@ -14,6 +14,7 @@ import { generateFinalInspectionPDF } from '@/lib/pdf-generator';
 import { generateWordDocument } from '@/lib/doc-generator';
 import { toast } from '@/hooks/use-toast';
 
+
 interface InspectionData {
   // Basic Info
   expedienteNova: string;
@@ -645,36 +646,111 @@ export const InspectionForm: React.FC = () => {
   };
 
   const generateWordDoc = async () => {
+    // guardamos el id del toast de carga para cerrarlo luego
+    let loadingToastId: string | number | undefined;
+  
     try {
-      toast({
-        title: "Generando documento",
-        description: "Por favor espera mientras se genera el documento Word...",
+      console.group('[UI] Generar Word');
+      console.time('[UI] Temps total');
+  
+      console.log('[UI] 1) Mostrant toast inicial');
+      const loading = toast({
+        title: 'Generando documento',
+        description: 'Por favor espera mientras se genera el documento Word...',
+        duration: 10000, // que se cierre solo si algo tarda/fracasa
       });
-
+      loadingToastId = (loading as any)?.id;
+  
+      console.log('[UI] 2) buildJSONData()');
       const jsonData = buildJSONData();
+      console.log('[UI] JSON keys:', Object.keys(jsonData || {}).length);
+      console.log('[UI] mercancia_declarada:', jsonData?.mercancia_declarada);
+  
+      console.log('[UI] 3) Cridant generateWordDocument()');
+      console.time('[UI] generateWordDocument');
       const blob = await generateWordDocument(jsonData);
-      
-      // Download the file
+      console.timeEnd('[UI] generateWordDocument');
+      console.log('[UI] Blob creat?', !!blob, 'mida:', blob?.size);
+  
+      if (!blob || !(blob instanceof Blob) || blob.size === 0) {
+        throw new Error('Blob vacío o inválido');
+      }
+  
+      console.log('[UI] 4) Preparant descàrrega');
       const url = URL.createObjectURL(blob);
+  
+      // intento 1: <a>.click()
       const link = document.createElement('a');
       link.href = url;
       link.download = `Informe_Inspeccion_${data.expedienteNova || 'NOVA'}_${data.fechaInspeccion}.docx`;
+      link.rel = 'noopener';
+      link.target = '_blank'; // ayuda en Safari
       document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      
+  
+      try {
+        link.click();
+        console.log('[UI] Descàrrega llançada amb <a>.click() ✅');
+      } catch (e) {
+        console.warn('[UI] <a>.click() ha fallat, provant window.open', e);
+        // intento 2: window.open (fallback Safari/iOS)
+        const w = window.open(url, '_blank');
+        if (!w) {
+          console.warn('[UI] window.open bloqueado por el navegador.');
+          // intento 3: mostramos un toast con enlace manual
+          toast({
+            title: 'Descarga bloqueada',
+            description:
+              'Tu navegador ha bloqueado la descarga automática. Haz clic aquí para descargar el archivo.',
+            action: (
+              <a
+                href={url}
+                download={`Informe_Inspeccion_${data.expedienteNova || 'NOVA'}_${data.fechaInspeccion}.docx`}
+                target="_blank"
+                rel="noreferrer"
+                style={{ textDecoration: 'underline' }}
+              >
+                Descargar ahora
+              </a>
+            ) as any,
+          });
+        }
+      } finally {
+        // revocar con un pequeño retardo para evitar cancelaciones tempranas
+        setTimeout(() => {
+          URL.revokeObjectURL(url);
+          document.body.removeChild(link);
+          console.log('[UI] URL revocada i <a> eliminat ✅');
+        }, 1500);
+      }
+  
+      // cerramos el toast de carga si aún sigue
+      if (loadingToastId !== undefined && (toast as any)?.dismiss) {
+        (toast as any).dismiss(loadingToastId);
+      }
+  
+      console.log('[UI] 5) Mostrant toast final');
       toast({
-        title: "Documento generado",
-        description: "El documento Word se ha descargado correctamente",
+        title: 'Documento generado',
+        description: 'El documento Word se ha descargado correctamente',
       });
+  
+      console.timeEnd('[UI] Temps total');
+      console.groupEnd();
     } catch (error) {
-      console.error('Error generating Word document:', error);
+      console.error('[UI] ❌ Error generateWordDoc:', error);
+  
+      // cerrar el toast de carga si se quedó abierto
+      if (loadingToastId !== undefined && (toast as any)?.dismiss) {
+        (toast as any).dismiss(loadingToastId);
+      }
+  
       toast({
-        title: "Error",
-        description: "No se pudo generar el documento Word",
-        variant: "destructive",
+        title: 'Error',
+        description: 'No se pudo generar el documento Word',
+        variant: 'destructive',
       });
+  
+      console.groupEnd?.();
     }
   };
 
