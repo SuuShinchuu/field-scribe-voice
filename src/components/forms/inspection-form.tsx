@@ -356,12 +356,12 @@ export const InspectionForm: React.FC = () => {
       numero_contrato: data.numeroContrato,
       via_transporte: viaTransporte,
       tipo_carga: tipoCarga,
-      numero_contenedores: data.numeroContenedores,
-      tipo_contenedor: data.tipoContenedor,
-      numeracion_contenedores: data.numeracionContenedores,
-      precintos_nova: data.precintosNova,
-      precintos_naviera: data.precintosNaviera,
-      puertos_origen_destino: data.puertos,
+      num_con: data.numeroContenedores,
+      t_con: data.tipoContenedor,
+      numer_con: data.numeracionContenedores,
+      pre_nova: data.precintosNova,
+      pre_naviera: data.precintosNaviera,
+      ori_dest: data.puertos,
 
       vendedor_empresa: data.vendedorEmpresa,
       vendedor_contacto: data.vendedorContacto,
@@ -1596,7 +1596,7 @@ export const InspectionForm: React.FC = () => {
           </CardContent>
         </Card>
 
-        <div className="flex flex-col gap-4 mt-6">
+<div className="flex flex-col gap-4 mt-6">
   {/* Navegación */}
   <div className="flex justify-between gap-4">
     {currentStep === 0 ? (
