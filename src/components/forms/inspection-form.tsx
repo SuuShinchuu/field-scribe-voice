@@ -481,7 +481,22 @@ export const InspectionForm: React.FC = () => {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
+// arriba del todo del componente (o antes de handleJSONUpload)
+const normScope = (v: any): 'yes' | 'no' | 'na' | '' => {
+  if (!v && v !== 0) return '';
+  const s = String(v).trim().toLowerCase();
+  if (s === 'si' || s === 'sí' || s === 'yes' || s === 'y') return 'yes';
+  if (s === 'no' || s === 'n') return 'no';
+  if (s === 'na' || s === 'n/a' || s === 'null' || s === '—') return 'na';
+  return '';
+};
 
+// opcional: para “Sí/No/SI/NO” en otros campos si los necesitaras como boolean
+const normYes = (v: any): boolean => {
+  if (v === true) return true;
+  const s = String(v ?? '').trim().toLowerCase();
+  return s === 'si' || s === 'sí' || s === 'yes' || s === 'true';
+};
   const handleJSONUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -534,29 +549,29 @@ export const InspectionForm: React.FC = () => {
           lugarInspeccion: jsonData.lugar_inspeccion || '',
           
           alcance: {
-            revisionContenedor: jsonData.alcance_inspeccion?.revision_contenedor || '',
-            conteoBultos: jsonData.alcance_inspeccion?.conteo_bultos || '',
-            aperturaBultos: jsonData.alcance_inspeccion?.apertura_bultos || '',
-            pesajeBultos: jsonData.alcance_inspeccion?.pesaje_bultos || '',
-            embalaje: jsonData.alcance_inspeccion?.embalaje || '',
-            paletsFumigados: jsonData.alcance_inspeccion?.palets_fumigados || '',
-            marcas: jsonData.alcance_inspeccion?.marcas || '',
-            descripcionEstiba: jsonData.alcance_inspeccion?.descripcion_estiba || '',
-            mercanciaTrincada: jsonData.alcance_inspeccion?.mercancia_trincada || '',
-            fechaProduccion: jsonData.alcance_inspeccion?.fecha_produccion_chk || '',
-            fechaCaducidad: jsonData.alcance_inspeccion?.fecha_caducidad_chk || '',
-            lotes: jsonData.alcance_inspeccion?.lotes_chk || '',
-            certificadosCalidad: jsonData.alcance_inspeccion?.certificados_chk || '',
-            tomaMuestras: jsonData.alcance_inspeccion?.toma_muestras || '',
-            pruebasLaboratorio: jsonData.alcance_inspeccion?.pruebas_laboratorio || '',
-            pesajeContenedor: jsonData.alcance_inspeccion?.pesaje_contenedor_chk || '',
-            tiqueOficial: jsonData.alcance_inspeccion?.tique_pesaje_chk || '',
-            temperaturaAlmacenaje: jsonData.alcance_inspeccion?.temp_almacenaje_chk || '',
-            temperaturaContenedor: jsonData.alcance_inspeccion?.temp_contenedor_chk || '',
-            precintadoContenedor: jsonData.alcance_inspeccion?.precintado_chk || '',
-            precintadoGrupaje: jsonData.alcance_inspeccion?.precintado_grupaje_chk || '',
-            precintoSeguridad: jsonData.alcance_inspeccion?.precinto_barra_chk || '',
-            informeCampo: jsonData.alcance_inspeccion?.informe_campo_chk || '',
+            revisionContenedor: normScope(jsonData.alcance_inspeccion?.revision_contenedor),
+            conteoBultos:       normScope(jsonData.alcance_inspeccion?.conteo_bultos),
+            aperturaBultos:     normScope(jsonData.alcance_inspeccion?.apertura_bultos),
+            pesajeBultos:       normScope(jsonData.alcance_inspeccion?.pesaje_bultos),
+            embalaje:           normScope(jsonData.alcance_inspeccion?.embalaje),
+            paletsFumigados:    normScope(jsonData.alcance_inspeccion?.palets_fumigados),
+            marcas:             normScope(jsonData.alcance_inspeccion?.marcas),
+            descripcionEstiba:  normScope(jsonData.alcance_inspeccion?.descripcion_estiba),
+            mercanciaTrincada:  normScope(jsonData.alcance_inspeccion?.mercancia_trincada),
+            fechaProduccion:    normScope(jsonData.alcance_inspeccion?.fecha_produccion_chk),
+            fechaCaducidad:     normScope(jsonData.alcance_inspeccion?.fecha_caducidad_chk),
+            lotes:              normScope(jsonData.alcance_inspeccion?.lotes_chk),
+            certificadosCalidad:normScope(jsonData.alcance_inspeccion?.certificados_chk),
+            tomaMuestras:       normScope(jsonData.alcance_inspeccion?.toma_muestras),
+            pruebasLaboratorio: normScope(jsonData.alcance_inspeccion?.pruebas_laboratorio),
+            pesajeContenedor:   normScope(jsonData.alcance_inspeccion?.pesaje_contenedor_chk),
+            tiqueOficial:       normScope(jsonData.alcance_inspeccion?.tique_pesaje_chk),
+            temperaturaAlmacenaje: normScope(jsonData.alcance_inspeccion?.temp_almacenaje_chk),
+            temperaturaContenedor: normScope(jsonData.alcance_inspeccion?.temp_contenedor_chk),
+            precintadoContenedor:  normScope(jsonData.alcance_inspeccion?.precintado_chk),
+            precintadoGrupaje:     normScope(jsonData.alcance_inspeccion?.precintado_grupaje_chk),
+            precintoSeguridad:     normScope(jsonData.alcance_inspeccion?.precinto_barra_chk),
+            informeCampo:          normScope(jsonData.alcance_inspeccion?.informe_campo_chk),
           },
           
           revisionContenedores: {
