@@ -1597,82 +1597,76 @@ export const InspectionForm: React.FC = () => {
         </Card>
 
         <div className="flex flex-col gap-4 mt-6">
-          <div className="flex justify-between gap-4">
-            {currentStep === 0 ? (
-              <Link to="/" className="flex-1">
-                <Button variant="outline" className="w-full">
-                  <Home className="h-4 w-4 mr-2" />
-                  Volver al Inicio
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                onClick={prevStep}
-                variant="outline"
-                className="flex-1"
-              >
-                <ChevronLeft className="h-4 w-4 mr-2" />
-                Anterior
-              </Button>
-            )}
-            <Button
-              onClick={currentStep === steps.length - 1 ? () => {
-                localStorage.setItem('inspectionData', JSON.stringify(data));
-                console.log('Informe final guardado:', data);
-                alert('Informe final guardado exitosamente');
-              } : nextStep}
-              className="flex-1"
-            >
-              {currentStep === steps.length - 1 ? (
-                <>
-                  <Save className="h-4 w-4 mr-2" />
-                  Guardar Informe
-                </>
-              ) : (
-                <>
-                  Siguiente
-                  <ChevronRight className="h-4 w-4 ml-2" />
-                </>
-              )}
-            </Button>
-          </div>
-          
-          {currentStep === steps.length - 1 && (
-            <>
-              <input
-                ref={jsonInputRef}
-                type="file"
-                accept=".json"
-                onChange={handleJSONUpload}
-                className="hidden"
-              />
-              <Button
-                onClick={() => jsonInputRef.current?.click()}
-                variant="outline"
-                className="w-full"
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Cargar desde JSON
-              </Button>
-              <Button
-                onClick={exportToJSON}
-                variant="outline"
-                className="w-full"
-              >
-                <FileJson className="h-4 w-4 mr-2" />
-                Exportar a JSON
-              </Button>
-              <Button
-                onClick={generateWordDoc}
-                variant="outline"
-                className="w-full"
-              >
-                <FileText className="h-4 w-4 mr-2" />
-                Generar Documento Word
-              </Button>
-            </>
-          )}
-        </div>
+  {/* Navegación */}
+  <div className="flex justify-between gap-4">
+    {currentStep === 0 ? (
+      <Link to="/" className="flex-1">
+        <Button type="button" variant="outline" className="w-full">
+          <Home className="h-4 w-4 mr-2" />
+          Volver al Inicio
+        </Button>
+      </Link>
+    ) : (
+      <Button type="button" onClick={prevStep} variant="outline" className="flex-1">
+        <ChevronLeft className="h-4 w-4 mr-2" />
+        Anterior
+      </Button>
+    )}
+
+    <Button
+      type="button"
+      onClick={
+        currentStep === steps.length - 1
+          ? () => {
+              localStorage.setItem('inspectionData', JSON.stringify(data));
+              console.log('Informe final guardado:', data);
+              alert('Informe final guardado exitosamente');
+            }
+          : nextStep
+      }
+      className="flex-1"
+    >
+      {currentStep === steps.length - 1 ? (
+        <>
+          <Save className="h-4 w-4 mr-2" />
+          Guardar Informe
+        </>
+      ) : (
+        <>
+          Siguiente
+          <ChevronRight className="h-4 w-4 ml-2" />
+        </>
+      )}
+    </Button>
+  </div>
+
+  {/* Acciones extra: siempre visibles en todos los pasos */}
+  {/* input hidden para subir JSON */}
+  <input
+    ref={jsonInputRef}
+    type="file"
+    accept=".json"
+    onChange={handleJSONUpload}
+    className="hidden"
+  />
+
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+    <Button type="button" onClick={() => jsonInputRef.current?.click()} variant="outline" className="w-full">
+      <Upload className="h-4 w-4 mr-2" />
+      Cargar desde JSON
+    </Button>
+
+    <Button type="button" onClick={exportToJSON} variant="outline" className="w-full">
+      <FileJson className="h-4 w-4 mr-2" />
+      Exportar a JSON
+    </Button>
+
+    <Button type="button" onClick={generateWordDoc} variant="outline" className="w-full">
+      <FileText className="h-4 w-4 mr-2" />
+      Generar Documento Word
+    </Button>
+  </div>
+</div>
       </div>
     </div>
   );
