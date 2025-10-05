@@ -11,9 +11,166 @@ import { PhotoInput } from '@/components/ui/photo-input';
 import { ChevronLeft, ChevronRight, Save, FileText, Home, ArrowLeft, Download, FileJson, Upload } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateFinalInspectionPDF } from '@/lib/pdf-generator';
-import { generateWordDocument, generatePDFFromWord } from '@/lib/doc-generator';
+import { generateWordDocument, generatePDFFromWord, prepareDocxImages } from '@/lib/doc-generator';
 import { toast } from '@/hooks/use-toast';
 
+
+async function resizeImage(file: File, maxWidth = 500, maxHeight = 300): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const scale = Math.min(maxWidth / img.width, maxHeight / img.height);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+
+      const ctx = canvas.getContext("2d")!;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      resolve(canvas.toDataURL("image/jpeg", 0.7)); // qualitat ~70%
+    };
+    img.onerror = reject;
+  });
+}
+
+// --- helpers per garantir dataURL ---
+const isDataUrl = (s?: string) => typeof s === 'string' && s.startsWith('data:');
+
+async function urlToDataUrl(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const blob = await res.blob();
+    return await new Promise<string>((resolve, reject) => {
+      const fr = new FileReader();
+      fr.onload = () => resolve(String(fr.result || ''));
+      fr.onerror = reject;
+      fr.readAsDataURL(blob);
+    });
+  } catch (e) {
+    console.warn('[img] No s’ha pogut convertir a dataURL:', url, e);
+    return '';
+  }
+}
+
+async function ensureDataUrl(v: any): Promise<string> {
+  // ja ve en dataURL
+  if (isDataUrl(v)) return v as string;
+
+  // objecte { path: ... }
+  if (v && typeof v === 'object' && isDataUrl(v.path)) return v.path as string;
+
+  // rutes/URLs -> a dataURL
+  if (typeof v === 'string' && v) {
+    if (/^https?:\/\//.test(v) || v.startsWith('/') || v.startsWith('./') || v.startsWith('../') || v.startsWith('imagenes/')) {
+      return await urlToDataUrl(v);
+    }
+  }
+
+  // qualsevol altre cas -> buit
+  return '';
+}
+
+async function ensureList(arr?: any[], max = 4): Promise<string[]> {
+  const srcs = (arr || []).slice(0, max);
+  const out: string[] = [];
+  for (const s of srcs) out.push(await ensureDataUrl(s));
+  while (out.length < max) out.push(''); // omple fins a 4
+  return out;
+}
+// Converteix Blob/File -> dataURL
+async function blobToDataUrl(blob: Blob): Promise<string> {
+  return await new Promise<string>((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onload = () => resolve(String(fr.result || ''));
+    fr.onerror = reject;
+    fr.readAsDataURL(blob);
+  });
+}
+
+// Redueix una imatge que ja tens com dataURL (o URL/Blob/File)
+async function resizeDataUrl(src: string | Blob | File, maxW = 500, maxH = 300, quality = 0.7): Promise<string> {
+  let dataUrl = '';
+
+  if (typeof src === 'string') {
+    // si és URL normal, baixa-la i converteix a dataURL
+    if (!isDataUrl(src)) {
+      try {
+        const res = await fetch(src, { cache: 'no-store' });
+        if (res.ok) dataUrl = await blobToDataUrl(await res.blob());
+      } catch { /* ignore */ }
+    } else {
+      dataUrl = src; // ja és dataURL
+    }
+  } else {
+    // Blob/File
+    dataUrl = await blobToDataUrl(src);
+  }
+
+  if (!dataUrl) return '';
+
+  // carrega i redimensiona
+  await new Promise<void>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve();
+    img.onerror = reject;
+    img.src = dataUrl;
+  });
+
+  const img = new Image();
+  img.src = dataUrl;
+
+  await new Promise<void>((r) => (img.onload = () => r()));
+
+  const scale = Math.min(maxW / img.width, maxH / img.height);
+  const canvas = document.createElement('canvas');
+  canvas.width = Math.max(1, Math.round(img.width * scale));
+  canvas.height = Math.max(1, Math.round(img.height * scale));
+
+  const ctx = canvas.getContext('2d')!;
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL('image/jpeg', quality);
+}
+
+// Converteix una llista heterogènia (dataURL/URL/Blob/File) a 4 imatges lleugeres
+async function shrinkListToCell(arr?: any[], max = 4, w = 500, h = 300): Promise<string[]> {
+  const srcs = (arr || []).slice(0, max);
+  const out: string[] = [];
+  for (const s of srcs) {
+    try {
+      const mini = await resizeDataUrl(s, w, h, 0.7);
+      out.push(mini || '');
+    } catch {
+      out.push('');
+    }
+  }
+  while (out.length < max) out.push('');
+  return out;
+}
+
+async function buildDocxPayload(jsonData: any) {
+  // Redueix a ~500×300 px (n’hi ha prou per 8×5 cm a ~150–200 dpi)
+  const merc = await shrinkListToCell(jsonData?.fotos?.mercancia, 4, 500, 300);
+  const marc = await shrinkListToCell(jsonData?.fotos?.marcas, 4, 500, 300);
+  const cont = await shrinkListToCell(jsonData?.fotos?.carga_contenedor, 4, 500, 300);
+
+  return {
+    ...jsonData,
+    MERCANCIA_1: merc[0],
+    MERCANCIA_2: merc[1],
+    MERCANCIA_3: merc[2],
+    MERCANCIA_4: merc[3],
+    MARCAS_1:    marc[0],
+    MARCAS_2:    marc[1],
+    MARCAS_3:    marc[2],
+    MARCAS_4:    marc[3],
+    CONTENEDOR_1: cont[0],
+    CONTENEDOR_2: cont[1],
+    CONTENEDOR_3: cont[2],
+    CONTENEDOR_4: cont[3],
+  };
+}
 
 interface InspectionData {
   // Basic Info
@@ -679,11 +836,17 @@ const normYes = (v: any): boolean => {
       console.log('[UI] 2) buildJSONData()');
       const jsonData = buildJSONData();
       console.log('[UI] JSON keys:', Object.keys(jsonData || {}).length);
-      console.log('[UI] mercancia_declarada:', jsonData?.mercancia_declarada);
-  
-      console.log('[UI] 3) Cridant generateWordDocument()');
-      console.time('[UI] generateWordDocument');
-      const blob = await generateWordDocument(jsonData);
+      
+      // 👇 Garantim dataURL abans de generar
+      const imgTags = await prepareDocxImages(jsonData);
+      const docxData = { ...jsonData, ...imgTags };
+      
+      // logs útils
+      console.log('[UI][DOCX] MERCANCIA_1 b64?', docxData.MERCANCIA_1?.startsWith('data:'), String(docxData.MERCANCIA_1 || '').slice(0, 40));
+      console.log('[UI][DOCX] MARCAS_1    b64?', docxData.MARCAS_1?.startsWith('data:'), String(docxData.MARCAS_1    || '').slice(0, 40));
+      console.log('[UI][DOCX] CONTENEDOR_1 b64?', docxData.CONTENEDOR_1?.startsWith('data:'), String(docxData.CONTENEDOR_1 || '').slice(0, 40));
+      
+      const blob = await generateWordDocument(docxData);
       console.timeEnd('[UI] generateWordDocument');
       console.log('[UI] Blob creat?', !!blob, 'mida:', blob?.size);
   
