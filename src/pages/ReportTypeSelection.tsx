@@ -78,7 +78,7 @@ const ReportTypeSelection: React.FC = () => {
         
         <div className="text-center mt-8">
           <p className="text-sm text-muted-foreground">
-            NOVA - Sistema de Gestión de Inspecciones
+            NOVA - All rights reserved
           </p>
         </div>
       </div>
